@@ -12,3 +12,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+security:
+  jwt:
+    token:
+      secret-key: ${JWT_SECRET_KEY}
+      expire-length: 300000
+

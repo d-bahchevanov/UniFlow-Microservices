@@ -1,5 +1,6 @@
 package com.uniflow.identity.controller;
 
+import com.uniflow.identity.dto.LoginResponseDto;
 import com.uniflow.identity.dto.ResponseUserDto;
 import com.uniflow.identity.dto.RequestUserDto;
 import com.uniflow.identity.exception.handler.GlobalExceptionHandler;
@@ -31,7 +32,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
     @PostMapping("/auth/login")
-    public ResponseEntity<ResponseUserDto> login(@Valid @RequestBody RequestUserDto userDto) {
+    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody RequestUserDto userDto) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.login(userDto));
     }
 }
