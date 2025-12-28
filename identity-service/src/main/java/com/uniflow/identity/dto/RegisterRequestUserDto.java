@@ -3,10 +3,12 @@ package com.uniflow.identity.dto;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
-public class RequestUserDto {
+@NoArgsConstructor
+public class RegisterRequestUserDto {
         @NotBlank
         @Pattern(regexp = "^[A-Za-z]+$", message = "Field must contain only letters")
         private String firstName;

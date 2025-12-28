@@ -1,6 +1,7 @@
 package com.uniflow.identity.services.impl;
+import com.uniflow.identity.dto.LoginRequestUserDto;
 import com.uniflow.identity.dto.LoginResponseDto;
-import com.uniflow.identity.dto.RequestUserDto;
+import com.uniflow.identity.dto.RegisterRequestUserDto;
 import com.uniflow.identity.dto.ResponseUserDto;
 import com.uniflow.identity.enums.Role;
 import com.uniflow.identity.exception.domain.ExistingEmailException;
@@ -14,11 +15,13 @@ import com.uniflow.identity.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+
+import static org.springframework.security.core.userdetails.User.builder;
+
 @AllArgsConstructor
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -27,7 +30,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final JwtService jwtService;
     @Override
     @Transactional
-    public ResponseUserDto createUser(RequestUserDto dto) {;
+    public ResponseUserDto createUser(RegisterRequestUserDto dto) {;
             if (userRepository.existsByEmail(dto.getEmail())) {
                 throw new ExistingEmailException("User with this email already exists");
             } else if (userRepository.existsByUsername(dto.getUsername())) {
@@ -51,10 +54,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public LoginResponseDto login(RequestUserDto requestUserDto) {
-        User user = userRepository.findUserByUsername(requestUserDto.getUsername())
+    public LoginResponseDto login(LoginRequestUserDto loginRequestUserDto) {
+        User user = userRepository.findUserByUsername(loginRequestUserDto.getUsername())
                 .orElseThrow(() -> new UserNotFoundException("No user with this username"));
-        if (!passwordEncoder.matches(requestUserDto.getPassword(),user.getPassword())) {
+        if (!passwordEncoder.matches(loginRequestUserDto.getPassword(),user.getPassword())) {
             throw new WrongPasswordException("Wrong password");
         }
         String token = jwtService.generateToken(user);
@@ -62,6 +65,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
     @Override
     public UserDetails loadUserByUsername(String username) {
-        return userRepository.findUserByUsername(username).orElseThrow(() -> new UserNotFoundException("No user with this username"));
+       User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UserNotFoundException("No user with this username"));
+       return builder()
+               .username(user.getUsername())
+               .password(user.getPassword())
+               .authorities("ROLE_" + user.getRole().name())
+               .build();
     }
 }

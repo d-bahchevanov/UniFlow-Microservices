@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "uni_user")
 @NoArgsConstructor
 @Getter
-public class User implements UserDetails {
+public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,7 +33,6 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Role role;
     private int age;
-    // Hashed starting Sprint 2
     @Column(nullable = false, unique = true)
     private String phoneNumber;
     @CreationTimestamp
@@ -49,30 +48,5 @@ public class User implements UserDetails {
         this.age = age;
         this.phoneNumber = phoneNumber;
         this.role = role;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
     }
 }
