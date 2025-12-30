@@ -18,6 +18,7 @@
     <!-- List of modules -->
     <modules>
         <module>identity-service</module>
+        <module>profile-service</module>
         <!-- future modules can be added here -->
     </modules>
 

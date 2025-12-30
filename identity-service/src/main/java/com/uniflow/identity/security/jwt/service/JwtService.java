@@ -1,5 +1,6 @@
-package com.uniflow.identity.security.jwt;
+package com.uniflow.identity.security.jwt.service;
 import com.uniflow.identity.model.User;
+import com.uniflow.identity.security.jwt.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -34,7 +35,7 @@ public class JwtService {
         Claims claims = extractClaims(token);
         return claims.getSubject();
     }
-    public boolean isTokenExpired(String token) {
+    public boolean isTokenValid(String token) {
         Claims claims = extractClaims(token);
         return claims.getExpiration().after(new Date());
     }

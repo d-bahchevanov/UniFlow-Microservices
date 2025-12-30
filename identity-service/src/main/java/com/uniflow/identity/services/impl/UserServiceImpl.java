@@ -10,7 +10,7 @@ import com.uniflow.identity.exception.domain.UserNotFoundException;
 import com.uniflow.identity.exception.domain.WrongPasswordException;
 import com.uniflow.identity.model.User;
 import com.uniflow.identity.repository.UserRepository;
-import com.uniflow.identity.security.jwt.JwtService;
+import com.uniflow.identity.security.jwt.service.JwtService;
 import com.uniflow.identity.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
