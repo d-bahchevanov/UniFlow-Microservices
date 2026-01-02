@@ -1,6 +1,7 @@
 package com.uniflow.profileservice.model;
 
 import com.uniflow.profileservice.enums.Role;
+import com.uniflow.profileservice.enums.Title;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,8 @@ public class Profile {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+    @Enumerated(EnumType.STRING)
+    private Title tile;
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;

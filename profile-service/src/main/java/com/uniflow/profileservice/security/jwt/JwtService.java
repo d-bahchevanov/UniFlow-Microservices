@@ -28,8 +28,12 @@ public class JwtService {
         return claims.getSubject();
     }
     public boolean isTokenValid(String token) {
-        Claims claims = extractClaims(token);
-        return claims.getExpiration().after(new Date());
+        try {
+            Claims claims = extractClaims(token);
+            return claims.getExpiration().after(new Date());
+        } catch (Exception ex) {
+            return false;
+        }
     }
 }
 

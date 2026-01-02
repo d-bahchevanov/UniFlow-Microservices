@@ -16,8 +16,9 @@ public class SecurityFilterChainConfig {
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
-        httpSecurity.authorizeHttpRequests(auth -> auth.anyRequest().authenticated()).csrf(AbstractHttpConfigurer::disable).
-                sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        httpSecurity.authorizeHttpRequests(auth -> auth.anyRequest().authenticated()).csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
