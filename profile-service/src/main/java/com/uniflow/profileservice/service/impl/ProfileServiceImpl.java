@@ -5,7 +5,7 @@ import com.uniflow.profileservice.dto.profile.response.StudentProfileResponseDto
 import com.uniflow.profileservice.dto.update.request.AdminUpdateRequestDto;
 import com.uniflow.profileservice.dto.update.response.AdminUpdateResponseDto;
 import com.uniflow.profileservice.dto.update.response.UpdateOwnProfileResponseDto;
-import com.uniflow.profileservice.dto.profile.intr.OwnProfileResponseDto;
+import com.uniflow.profileservice.dto.profile.intr.ProfileResponseDto;
 import com.uniflow.profileservice.dto.profile.request.ProfileRequestDto;
 import com.uniflow.profileservice.dto.profile.response.ProfessorProfileResponseDto;
 import com.uniflow.profileservice.enums.Role;
@@ -77,13 +77,16 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public com.uniflow.profileservice.dto.profile.response.StudentProfileResponseDto viewProfileByUsername(String username) {
+    public ProfileResponseDto viewProfileByUsername(String username) {
         Profile profile = profileRepository.findProfileByUsername(username).orElseThrow(() -> new ProfileNotFoundException("No profile with this username"));
-        return new com.uniflow.profileservice.dto.profile.response.StudentProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getSpecialization(), profile.getYearOfStudy(), profile.getRole());
+        if (profile.getRole() == Role.STUDENT) {
+            return new StudentProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getSpecialization(), profile.getYearOfStudy(), profile.getRole())
+        }
+        return new ProfessorProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getTitle(), profile.getRole());
     }
 
     @Override
-    public OwnProfileResponseDto viewProfile() {
+    public ProfileResponseDto viewProfile() {
         String username = Objects.requireNonNull(SecurityContextHolder.getContext()
                         .getAuthentication())
                 .getName();
@@ -91,7 +94,7 @@ public class ProfileServiceImpl implements ProfileService {
         Profile profile = profileRepository.findProfileByUsername(username)
                 .orElseThrow(() -> new ProfileNotFoundException("Profile not found"));
         if (profile.getRole() == Role.STUDENT) {
-            return new com.uniflow.profileservice.dto.profile.response.StudentProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getSpecialization(), profile.getYearOfStudy(), profile.getRole());
+            return new StudentProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getSpecialization(), profile.getYearOfStudy(), profile.getRole());
         }
         else if (profile.getRole() == Role.PROFESSOR) {
             return new ProfessorProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getTitle(), profile.getRole());
@@ -108,8 +111,12 @@ public UpdateOwnProfileResponseDto updateOwnProfile(ProfileRequestDto profileReq
     Profile profile = profileRepository.findProfileByUsername(username)
             .orElseThrow(() -> new ProfileNotFoundException("This profile does not exist"));
 
-    profile.setFirstName(profileRequestDto.getFirstName());
-    profile.setLastName(profileRequestDto.getLastName());
+    if (profileRequestDto.getFirstName() != null) {
+        profile.setFirstName(profileRequestDto.getFirstName());
+    }
+    if (profileRequestDto.getLastName() != null) {
+        profile.setLastName(profileRequestDto.getLastName());
+    }
 
     profileRepository.save(profile);
 

@@ -6,7 +6,7 @@ import com.uniflow.profileservice.dto.update.request.AdminUpdateRequestDto;
 import com.uniflow.profileservice.dto.update.response.AdminUpdateResponseDto;
 import com.uniflow.profileservice.dto.profile.response.ProfessorProfileResponseDto;
 import com.uniflow.profileservice.dto.update.response.UpdateOwnProfileResponseDto;
-import com.uniflow.profileservice.dto.profile.intr.OwnProfileResponseDto;
+import com.uniflow.profileservice.dto.profile.intr.ProfileResponseDto;
 import com.uniflow.profileservice.dto.profile.request.ProfileRequestDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -15,8 +15,8 @@ import java.util.List;
 public interface ProfileService extends UserDetailsService {
     List<StudentProfileResponseDto> viewStudentProfile(ProfileRequestDto studentRequestDto);
     List<ProfessorProfileResponseDto> viewProfessorProfile(ProfileRequestDto professorRequestDto);
-    com.uniflow.profileservice.dto.profile.response.StudentProfileResponseDto viewProfileByUsername(String username);
-    OwnProfileResponseDto viewProfile();
+    ProfileResponseDto viewProfileByUsername(String username);
+    ProfileResponseDto viewProfile();
     UpdateOwnProfileResponseDto updateOwnProfile(ProfileRequestDto profileRequestDto);
     AdminUpdateResponseDto updateProfileByAdmin(String username, AdminUpdateRequestDto adminUpdateRequestDto);
 }

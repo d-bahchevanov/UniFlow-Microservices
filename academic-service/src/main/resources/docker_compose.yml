@@ -1,0 +1,10 @@
+services:
+  academy-db:
+    image: postgres:15
+    container_name: academy_postgres
+    environment:
+      POSTGRES_DB: academy_db
+      POSTGRES_USER: academy_user
+      POSTGRES_PASSWORD: academy_pass
+    ports:
+      - "5435:5432"

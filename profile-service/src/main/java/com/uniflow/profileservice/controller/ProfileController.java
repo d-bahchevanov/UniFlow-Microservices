@@ -5,7 +5,7 @@ import com.uniflow.profileservice.dto.update.request.AdminUpdateRequestDto;
 import com.uniflow.profileservice.dto.update.response.AdminUpdateResponseDto;
 import com.uniflow.profileservice.dto.profile.response.ProfessorProfileResponseDto;
 import com.uniflow.profileservice.dto.update.response.UpdateOwnProfileResponseDto;
-import com.uniflow.profileservice.dto.profile.intr.OwnProfileResponseDto;
+import com.uniflow.profileservice.dto.profile.intr.ProfileResponseDto;
 import com.uniflow.profileservice.dto.profile.request.ProfileRequestDto;
 import com.uniflow.profileservice.service.ProfileService;
 import jakarta.validation.Valid;
@@ -22,12 +22,12 @@ import java.util.List;
 public class ProfileController {
     private final ProfileService profileService;
     @GetMapping("/me")
-    public ResponseEntity<OwnProfileResponseDto> viewProfile(){
+    public ResponseEntity<ProfileResponseDto> viewProfile(){
         return ResponseEntity.ok(profileService.viewProfile());
     }
     @GetMapping("/profile/{username}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<com.uniflow.profileservice.dto.profile.response.StudentProfileResponseDto> viewProfileByUsername(@PathVariable String username) {
+    public ResponseEntity<ProfileResponseDto> viewProfileByUsername(@PathVariable String username) {
         return ResponseEntity.ok(profileService.viewProfileByUsername(username));
     }
     @GetMapping("/search/student")

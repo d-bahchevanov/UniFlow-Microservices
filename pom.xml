@@ -19,6 +19,7 @@
     <modules>
         <module>identity-service</module>
         <module>profile-service</module>
+        <module>academic-service</module>
         <!-- future modules can be added here -->
     </modules>
 
