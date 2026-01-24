@@ -1,6 +1,5 @@
 package com.uniflow.academicservice.model;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@AllArgsConstructor
 @Getter
 @NoArgsConstructor
 @Table(
@@ -27,5 +25,10 @@ public class Specialization {
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
     @OneToMany(mappedBy = "specialization", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private List<Subject> subjects = new ArrayList<>();
+    private final List<Subject> subjects = new ArrayList<>();
+
+    public Specialization(String name, Faculty faculty) {
+        this.name = name;
+        this.faculty = faculty;
+    }
 }

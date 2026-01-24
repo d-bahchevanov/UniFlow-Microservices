@@ -1,16 +1,15 @@
 package com.uniflow.academicservice.service;
 
-import com.uniflow.academicservice.enums.SpecializationEnum;
-import com.uniflow.academicservice.enums.SubjectEnum;
-import com.uniflow.academicservice.model.Specialization;
-import com.uniflow.academicservice.model.Subject;
+import com.uniflow.academicservice.dto.SubjectResponseDto;
 
 import java.util.List;
 
 public interface SubjectService {
-    List<Subject> getBySpecialization(String specializationName);
-    Subject getSubjectByName(String name);
-    String createSubject(String name);
-    boolean validateSubjectBelongsToSpecialization(String subject, String specialization);
+    List<SubjectResponseDto> getSubjectsBySpecialization(String specializationName);
+    SubjectResponseDto getSubjectByName(String name);
+    SubjectResponseDto createSubject(String subjectName, String specializationName);
+    List<SubjectResponseDto> getAllSubjects();
+    void validateSubjectBelongsToSpecialization(String subject, String specialization);
+    boolean subjectExistsByName(String name);
 }
 

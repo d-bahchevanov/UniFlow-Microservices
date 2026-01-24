@@ -8,7 +8,7 @@ import java.util.List;
 public interface FacultyService {
 
     List<FacultyResponseDto> getAllFaculties();
-    String createFaculty(String name);
+    FacultyResponseDto createFaculty(String name);
     FacultyResponseDto getFacultyByName(String name);
 }
 

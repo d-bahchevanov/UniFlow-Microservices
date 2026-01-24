@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@AllArgsConstructor
 @Getter
 @NoArgsConstructor
 public class Subject {
@@ -17,4 +16,9 @@ public class Subject {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "specialization_id")
     private Specialization specialization;
+
+    public Subject(String name, Specialization specialization) {
+        this.name = name;
+        this.specialization = specialization;
+    }
 }
