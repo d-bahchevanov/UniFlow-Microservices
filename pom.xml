@@ -20,6 +20,10 @@
         <module>identity-service</module>
         <module>profile-service</module>
         <module>academic-service</module>
+        <module>enroll-service</module>
+        <module>configserver</module>
+        <module>gatewayserver</module>
+        <module>eurekaserver</module>
         <!-- future modules can be added here -->
     </modules>
 

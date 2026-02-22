@@ -1,5 +1,4 @@
 package com.uniflow.profileservice.service.impl;
-
 import com.uniflow.profileservice.dto.profile.response.AdminProfileResponseDto;
 import com.uniflow.profileservice.dto.profile.response.StudentProfileResponseDto;
 import com.uniflow.profileservice.dto.update.request.AdminUpdateRequestDto;
@@ -80,7 +79,7 @@ public class ProfileServiceImpl implements ProfileService {
     public ProfileResponseDto viewProfileByUsername(String username) {
         Profile profile = profileRepository.findProfileByUsername(username).orElseThrow(() -> new ProfileNotFoundException("No profile with this username"));
         if (profile.getRole() == Role.STUDENT) {
-            return new StudentProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getSpecialization(), profile.getYearOfStudy(), profile.getRole())
+            return new StudentProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getSpecialization(), profile.getYearOfStudy(), profile.getRole());
         }
         return new ProfessorProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getTitle(), profile.getRole());
     }

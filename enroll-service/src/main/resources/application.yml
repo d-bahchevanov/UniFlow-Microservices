@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5435/academy_db
-    username: academy_user
-    password: academy_pass
+    url: jdbc:postgresql://localhost:5436/enroll_db
+    username: enroll_user
+    password: enroll_pass
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -12,12 +12,3 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
-
-
-
-security:
-  jwt:
-    secret-key: ${JWT_SECRET_KEY}
-    issuer: uniflow-identity-service
-
