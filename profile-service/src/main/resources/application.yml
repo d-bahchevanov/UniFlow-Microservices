@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: "profile"
   datasource:
     url: jdbc:postgresql://localhost:5433/profile_db
     username: profile_user
@@ -12,8 +14,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
-
+server:
+  port: 8081
 security:
   jwt:
     secret-key: ${JWT_SECRET_KEY}
