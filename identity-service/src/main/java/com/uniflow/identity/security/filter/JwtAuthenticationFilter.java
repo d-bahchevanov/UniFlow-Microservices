@@ -17,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
+@AllArgsConstructor
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
@@ -56,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         logger.info("Username found in JWT: " + userName);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             logger.info("Already logged in: " + userName);
             return;
         }

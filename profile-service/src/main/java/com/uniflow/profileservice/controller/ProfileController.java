@@ -1,5 +1,6 @@
 package com.uniflow.profileservice.controller;
 
+import com.uniflow.profileservice.dto.profile.request.CreateProfileRequest;
 import com.uniflow.profileservice.dto.profile.response.StudentProfileResponseDto;
 import com.uniflow.profileservice.dto.update.request.AdminUpdateRequestDto;
 import com.uniflow.profileservice.dto.update.response.AdminUpdateResponseDto;
@@ -21,6 +22,13 @@ import java.util.List;
 @AllArgsConstructor
 public class ProfileController {
     private final ProfileService profileService;
+    @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> createProfile(@RequestBody CreateProfileRequest request) {
+        profileService.createProfile(request);
+
+        return ResponseEntity.ok().build();
+    }
     @GetMapping("/me")
     public ResponseEntity<ProfileResponseDto> viewProfile(){
         return ResponseEntity.ok(profileService.viewProfile());

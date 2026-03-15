@@ -1,9 +1,6 @@
 package com.uniflow.identity.services.impl;
-import com.uniflow.identity.dto.LoginRequestUserDto;
-import com.uniflow.identity.dto.LoginResponseDto;
-import com.uniflow.identity.dto.RegisterRequestUserDto;
-import com.uniflow.identity.dto.ResponseUserDto;
-import com.uniflow.identity.enums.Role;
+import com.uniflow.identity.client.ProfileClient;
+import com.uniflow.identity.dto.*;
 import com.uniflow.identity.exception.domain.ExistingEmailException;
 import com.uniflow.identity.exception.domain.ExistingUsernameException;
 import com.uniflow.identity.exception.domain.UserNotFoundException;
@@ -28,17 +25,28 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final ProfileClient profileClient;
     @Override
     @Transactional
-    public ResponseUserDto createUser(RegisterRequestUserDto dto) {;
+    public ResponseUserDto createUser(CreateRequestUserDto dto) {
             if (userRepository.existsByEmail(dto.getEmail())) {
                 throw new ExistingEmailException("User with this email already exists");
             } else if (userRepository.existsByUsername(dto.getUsername())) {
              throw new ExistingUsernameException("User with this username already exists");
         }
             User user = new User(dto.getFirstName(), dto.getLastName(), dto.getEmail(), dto.getUsername(),
-                    passwordEncoder.encode(dto.getPassword()), dto.getAge(), dto.getPhoneNumber(), Role.NON_ALIGNED);
+                    passwordEncoder.encode(dto.getPassword()), dto.getAge(), dto.getPhoneNumber(), dto.getRole());
         userRepository.save(user);
+
+        profileClient.createProfile(
+                new CreateProfileRequest(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getEmail(),
+                        user.getPassword(),
+                        user.getRole()
+                )
+        );
         return new ResponseUserDto(user.getEmail(), user.getUsername());
     }
 

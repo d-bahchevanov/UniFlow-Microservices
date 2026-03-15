@@ -1,6 +1,7 @@
 package com.uniflow.profileservice.service;
 
 
+import com.uniflow.profileservice.dto.profile.request.CreateProfileRequest;
 import com.uniflow.profileservice.dto.profile.response.StudentProfileResponseDto;
 import com.uniflow.profileservice.dto.update.request.AdminUpdateRequestDto;
 import com.uniflow.profileservice.dto.update.response.AdminUpdateResponseDto;
@@ -19,4 +20,5 @@ public interface ProfileService extends UserDetailsService {
     ProfileResponseDto viewProfile();
     UpdateOwnProfileResponseDto updateOwnProfile(ProfileRequestDto profileRequestDto);
     AdminUpdateResponseDto updateProfileByAdmin(String username, AdminUpdateRequestDto adminUpdateRequestDto);
+    void createProfile(CreateProfileRequest request);
 }

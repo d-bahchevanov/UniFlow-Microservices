@@ -1,5 +1,6 @@
 package com.uniflow.identity.dto;
 
+import com.uniflow.identity.enums.Role;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequestUserDto {
+public class CreateRequestUserDto {
         @NotBlank
         @Pattern(regexp = "^[A-Za-z]+$", message = "Field must contain only letters")
         private String firstName;
@@ -27,4 +28,6 @@ public class RegisterRequestUserDto {
         @NotBlank
         @Pattern(regexp = "\\d{10}", message = "Phone number must be exactly 10 digits")
         private String phoneNumber;
+        @NotNull
+        private Role role;
     }

@@ -3,7 +3,7 @@ package com.uniflow.identity.controller;
 import com.uniflow.identity.dto.LoginRequestUserDto;
 import com.uniflow.identity.dto.LoginResponseDto;
 import com.uniflow.identity.dto.ResponseUserDto;
-import com.uniflow.identity.dto.RegisterRequestUserDto;
+import com.uniflow.identity.dto.CreateRequestUserDto;
 import com.uniflow.identity.services.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -19,11 +19,12 @@ import java.util.List;
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
-    @PostMapping("/register")
-    public ResponseEntity<ResponseUserDto> registerUser(@Valid @RequestBody RegisterRequestUserDto userDto) {
+    @PreAuthorize(value = "hasRole('ADMIN')")
+    @PostMapping("/create")
+    public ResponseEntity<ResponseUserDto> createUser(@Valid @RequestBody CreateRequestUserDto userDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userDto));
     }
-    @GetMapping("id/{id}")
+    @GetMapping("/{id}")
     @PreAuthorize(value = "hasRole('ADMIN')")
     public ResponseEntity<ResponseUserDto> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));

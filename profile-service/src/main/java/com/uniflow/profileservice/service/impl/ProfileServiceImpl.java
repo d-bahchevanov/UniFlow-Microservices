@@ -1,4 +1,5 @@
 package com.uniflow.profileservice.service.impl;
+import com.uniflow.profileservice.dto.profile.request.CreateProfileRequest;
 import com.uniflow.profileservice.dto.profile.response.AdminProfileResponseDto;
 import com.uniflow.profileservice.dto.profile.response.StudentProfileResponseDto;
 import com.uniflow.profileservice.dto.update.request.AdminUpdateRequestDto;
@@ -8,6 +9,7 @@ import com.uniflow.profileservice.dto.profile.intr.ProfileResponseDto;
 import com.uniflow.profileservice.dto.profile.request.ProfileRequestDto;
 import com.uniflow.profileservice.dto.profile.response.ProfessorProfileResponseDto;
 import com.uniflow.profileservice.enums.Role;
+import com.uniflow.profileservice.exception.domain.ProfileAlreadyExistException;
 import com.uniflow.profileservice.exception.domain.ProfileNotFoundException;
 import com.uniflow.profileservice.model.Profile;
 import com.uniflow.profileservice.repository.ProfileRepository;
@@ -27,7 +29,24 @@ import static org.springframework.security.core.userdetails.User.builder;
 @AllArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
     private final ProfileRepository profileRepository;
+    @Override
+    public void createProfile(CreateProfileRequest request) {
 
+        profileRepository.findByUserId(request.userId())
+                .ifPresent(profile -> {
+                    throw new ProfileAlreadyExistException("Profile already exists for user");
+                });
+
+        Profile profile = Profile.builder()
+                .userId(request.userId())
+                .username(request.username())
+                .email(request.email())
+                .password(request.password())
+                .role(request.role())
+                .build();
+
+        profileRepository.save(profile);
+    }
     @Override
     public UserDetails loadUserByUsername(String username) {
         Profile profile = profileRepository.findProfileByUsername(username).orElseThrow(() -> new UsernameNotFoundException("No profile with this username"));
