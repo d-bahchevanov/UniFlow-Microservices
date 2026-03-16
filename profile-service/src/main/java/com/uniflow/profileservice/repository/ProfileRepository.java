@@ -1,5 +1,6 @@
 package com.uniflow.profileservice.repository;
 
+import com.uniflow.profileservice.enums.Role;
 import com.uniflow.profileservice.model.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

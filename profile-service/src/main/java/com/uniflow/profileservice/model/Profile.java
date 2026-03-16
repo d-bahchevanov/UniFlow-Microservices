@@ -1,7 +1,7 @@
 package com.uniflow.profileservice.model;
 
 import com.uniflow.profileservice.enums.Role;
-import com.uniflow.profileservice.enums.Title;
+import com.uniflow.profileservice.enums.AcademicTitle;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,7 +32,7 @@ public class Profile {
     @Column(nullable = false)
     private Role role;
     @Enumerated(EnumType.STRING)
-    private Title title;
+    private AcademicTitle academicTitle;
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;

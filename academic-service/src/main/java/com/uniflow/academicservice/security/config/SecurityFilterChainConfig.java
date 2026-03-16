@@ -1,6 +1,6 @@
-package com.uniflow.profileservice.security.config;
-import com.uniflow.profileservice.security.filter.JwtAuthorizationFilter;
-import io.jsonwebtoken.security.Jwk;
+package com.uniflow.academicservice.security.config;
+
+import com.uniflow.academicservice.security.filter.JwtAuthorizationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,7 @@ public class SecurityFilterChainConfig {
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(auth -> auth.requestMatchers("/api/profiles/create").permitAll().anyRequest().authenticated()).csrf(AbstractHttpConfigurer::disable)
+        httpSecurity.authorizeHttpRequests(auth -> auth.anyRequest().authenticated()).csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);

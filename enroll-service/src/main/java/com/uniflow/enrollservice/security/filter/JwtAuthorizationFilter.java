@@ -1,7 +1,6 @@
-package com.uniflow.profileservice.security.filter;
+package com.uniflow.enrollservice.security.filter;
 
-import com.uniflow.profileservice.security.jwt.JwtService;
-import com.uniflow.profileservice.service.ProfileService;
+import com.uniflow.enrollservice.security.jwt.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import java.io.IOException;
 
 @Component

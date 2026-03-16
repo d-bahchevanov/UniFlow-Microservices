@@ -7,8 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class ProfileRequestDto {
-    @NotBlank
     private String firstName;
-    @NotBlank
     private String lastName;
 }

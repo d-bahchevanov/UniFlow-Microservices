@@ -1,10 +1,12 @@
 package com.uniflow.profileservice.enums;
 
-public enum Title {
+public enum AcademicTitle {
     ASSISTANT,
     ASSOCIATE,
     PROFESSOR,
     CHAIR,
-    DOCTOR
+    DOCTOR,
+    BACHELOR,
+    MASTER
     ;
 }

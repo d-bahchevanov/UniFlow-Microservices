@@ -63,8 +63,11 @@ public class ProfileServiceImpl implements ProfileService {
         if (profiles.isEmpty()) {
             throw new ProfileNotFoundException("No profiles found");
         }
-        return profiles.stream()
-                .filter(p -> p.getRole() == Role.STUDENT)
+        List<Profile> foundProfiles = profiles.stream().filter(p -> p.getRole() == Role.STUDENT).toList();
+        if (foundProfiles.isEmpty()) {
+            throw new ProfileNotFoundException("No such student");
+        }
+        return foundProfiles.stream()
                 .map(p -> new StudentProfileResponseDto(
                         p.getUsername(),
                         p.getFirstName(),
@@ -72,7 +75,9 @@ public class ProfileServiceImpl implements ProfileService {
                         p.getFaculty(),
                         p.getSpecialization(),
                         p.getYearOfStudy(),
-                        p.getRole()))
+                        p.getRole(),
+                        p.getAcademicTitle()
+                ))
                 .toList();
     }
 
@@ -82,14 +87,17 @@ public class ProfileServiceImpl implements ProfileService {
         if (profiles.isEmpty()) {
             throw new ProfileNotFoundException("No profiles found");
         }
-        return profiles.stream()
-                .filter(p -> p.getRole() == Role.PROFESSOR)
+        List<Profile> foundProfiles = profiles.stream().filter(p -> p.getRole() == Role.PROFESSOR).toList();
+        if (foundProfiles.isEmpty()) {
+            throw new ProfileNotFoundException("No such professor");
+        }
+        return foundProfiles.stream()
                 .map(p -> new ProfessorProfileResponseDto(
                         p.getUsername(),
                         p.getFirstName(),
                         p.getLastName(),
                         p.getFaculty(),
-                        p.getTitle(),
+                        p.getAcademicTitle(),
                         p.getRole()))
                 .toList();
     }
@@ -98,9 +106,9 @@ public class ProfileServiceImpl implements ProfileService {
     public ProfileResponseDto viewProfileByUsername(String username) {
         Profile profile = profileRepository.findProfileByUsername(username).orElseThrow(() -> new ProfileNotFoundException("No profile with this username"));
         if (profile.getRole() == Role.STUDENT) {
-            return new StudentProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getSpecialization(), profile.getYearOfStudy(), profile.getRole());
+            return new StudentProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getSpecialization(), profile.getYearOfStudy(), profile.getRole(), profile.getAcademicTitle());
         }
-        return new ProfessorProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getTitle(), profile.getRole());
+        return new ProfessorProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getAcademicTitle(), profile.getRole());
     }
 
     @Override
@@ -112,10 +120,10 @@ public class ProfileServiceImpl implements ProfileService {
         Profile profile = profileRepository.findProfileByUsername(username)
                 .orElseThrow(() -> new ProfileNotFoundException("Profile not found"));
         if (profile.getRole() == Role.STUDENT) {
-            return new StudentProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getSpecialization(), profile.getYearOfStudy(), profile.getRole());
+            return new StudentProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getSpecialization(), profile.getYearOfStudy(), profile.getRole(), profile.getAcademicTitle());
         }
         else if (profile.getRole() == Role.PROFESSOR) {
-            return new ProfessorProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getTitle(), profile.getRole());
+            return new ProfessorProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getAcademicTitle(), profile.getRole());
         }
         return new AdminProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getRole());
 }
@@ -159,11 +167,11 @@ public AdminUpdateResponseDto updateProfileByAdmin(String username, AdminUpdateR
         profile.setYearOfStudy(adminUpdateRequestDto.getYearOfStudy());
     }
 
-    if (adminUpdateRequestDto.getTitle() != null && profile.getRole() == Role.PROFESSOR) {
-        profile.setTitle(adminUpdateRequestDto.getTitle());
+    if (adminUpdateRequestDto.getAcademicTitle() != null) {
+        profile.setAcademicTitle(adminUpdateRequestDto.getAcademicTitle());
     }
 
     profileRepository.save(profile);
-    return new AdminUpdateResponseDto(profile.getFaculty(), profile.getSpecialization(), profile.getYearOfStudy(), profile.getTitle());
+    return new AdminUpdateResponseDto(profile.getFaculty(), profile.getSpecialization(), profile.getYearOfStudy(), profile.getAcademicTitle());
     }
 }

@@ -1,6 +1,6 @@
 package com.uniflow.profileservice.dto.update.request;
 
-import com.uniflow.profileservice.enums.Title;
+import com.uniflow.profileservice.enums.AcademicTitle;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -14,5 +14,5 @@ public class AdminUpdateRequestDto {
     @Min(value = 1)
     @Max(value = 6)
     private Integer yearOfStudy;
-    private Title title;
+    private AcademicTitle academicTitle;
 }
