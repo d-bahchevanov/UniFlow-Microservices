@@ -17,14 +17,14 @@ public class FacultyController {
     private final FacultyService facultyService;
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<FacultyResponseDto> createFaculty(@RequestParam String facultyName){
+    public ResponseEntity<String> createFaculty(@RequestParam String facultyName){
         return ResponseEntity.status(HttpStatus.CREATED).body(facultyService.createFaculty(facultyName));
     }
     @GetMapping("/get")
     public ResponseEntity<List<FacultyResponseDto>> getAllFaculties() {
         return ResponseEntity.ok(facultyService.getAllFaculties());
     }
-    @GetMapping("/{name}")
+    @GetMapping("/get/{name}")
     public ResponseEntity<FacultyResponseDto> getFacultyByName(@PathVariable String name) {
         return ResponseEntity.ok(facultyService.getFacultyByName(name));
     }

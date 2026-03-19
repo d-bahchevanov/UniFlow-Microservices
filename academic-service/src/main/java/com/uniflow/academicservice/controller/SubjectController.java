@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/subject")
+@RequestMapping("/subject")
 @AllArgsConstructor
 public class SubjectController {
     private final SubjectService subjectService;
@@ -24,7 +24,7 @@ public class SubjectController {
     public ResponseEntity<List<SubjectResponseDto>> getAllSubjects() {
         return ResponseEntity.ok(subjectService.getAllSubjects());
     }
-    @GetMapping("/specialization/{specializationName}")
+    @GetMapping("/specialization/get/{specializationName}")
     public ResponseEntity<List<SubjectResponseDto>> getAllSubjectsBySpecialization(@PathVariable String specializationName) {
         return ResponseEntity.ok(subjectService.getSubjectsBySpecialization(specializationName));
     }

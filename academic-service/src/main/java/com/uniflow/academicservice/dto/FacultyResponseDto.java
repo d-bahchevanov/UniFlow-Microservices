@@ -9,5 +9,5 @@ import java.util.List;
 @AllArgsConstructor
 public class FacultyResponseDto {
     private String name;
-    private List<Specialization> specializationList;
+    private List<DomainNameDto> specializationList;
 }

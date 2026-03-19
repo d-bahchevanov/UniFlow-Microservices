@@ -1,11 +1,10 @@
 package com.uniflow.academicservice.dto;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import java.util.List;
+
 @AllArgsConstructor
 @Getter
-public class SpecializationResponseDto {
+public class DomainNameDto {
     private String name;
-    private String facultyName;
-    private List<DomainNameDto> subjectsList;
 }

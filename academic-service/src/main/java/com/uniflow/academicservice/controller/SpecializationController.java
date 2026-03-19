@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/specialization")
+@RequestMapping("/specialization")
 @AllArgsConstructor
 public class SpecializationController {
     private final SpecializationService specializationService;
@@ -28,7 +28,7 @@ public class SpecializationController {
     public ResponseEntity<SpecializationResponseDto> getSpecializationByName(@PathVariable String specializationName) {
         return ResponseEntity.ok(specializationService.getSpecializationByName(specializationName));
     }
-    @GetMapping("/faculty/{facultyName}")
+    @GetMapping("/faculty/get/{facultyName}")
     public ResponseEntity<List<SpecializationResponseDto>> getSpecializationByFacultyName(@PathVariable String facultyName) {
         return ResponseEntity.ok(specializationService.getSpecializationsByFaculty(facultyName));
     }
