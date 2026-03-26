@@ -24,7 +24,7 @@ public class UserController {
     public ResponseEntity<ResponseUserDto> createUser(@Valid @RequestBody CreateRequestUserDto userDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userDto));
     }
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     @PreAuthorize(value = "hasRole('ADMIN')")
     public ResponseEntity<ResponseUserDto> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
@@ -37,5 +37,11 @@ public class UserController {
     @PostMapping("/auth/login")
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestUserDto userDto) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.login(userDto));
+    }
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize(value = "hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

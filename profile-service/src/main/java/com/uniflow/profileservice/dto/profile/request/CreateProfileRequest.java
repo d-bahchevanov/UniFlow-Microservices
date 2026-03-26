@@ -7,6 +7,10 @@ public record CreateProfileRequest(
         @NotNull
         Long userId,
         @NotNull
+        String firstName,
+        @NotNull
+        String lastName,
+        @NotNull
         String username,
         @NotNull
         String email,

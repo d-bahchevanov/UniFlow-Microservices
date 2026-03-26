@@ -10,6 +10,7 @@ import com.uniflow.academicservice.model.Subject;
 import com.uniflow.academicservice.repository.SpecializationRepository;
 import com.uniflow.academicservice.repository.SubjectRepository;
 import com.uniflow.academicservice.service.SubjectService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -69,5 +70,14 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public boolean subjectExistsByName(String name) {
         return subjectRepository.existsSubjectByName(name);
+    }
+
+    @Override
+    @Transactional
+    public void deleteSubject(String name) {
+        if (!subjectRepository.existsSubjectByName(name)) {
+            throw new SubjectNotFoundException("No such subject exists");
+        }
+        subjectRepository.deleteSubjectByName(name);
     }
 }

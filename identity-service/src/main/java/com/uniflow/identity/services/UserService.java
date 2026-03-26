@@ -13,4 +13,5 @@ public interface UserService extends UserDetailsService {
     ResponseUserDto getUserById(Long id);
     List<ResponseUserDto> getAllUsers();
     LoginResponseDto login(LoginRequestUserDto dto);
+    void deleteUser(Long id);
 }

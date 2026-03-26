@@ -9,5 +9,6 @@ public interface SpecializationService {
     SpecializationResponseDto getSpecializationByName(String name);
     boolean specializationExistsByName(String name);
     void validateSpecializationBelongsToFaculty(String specializationName, String facultyName);
+    void deleteSpecialization(String name);
 }
 

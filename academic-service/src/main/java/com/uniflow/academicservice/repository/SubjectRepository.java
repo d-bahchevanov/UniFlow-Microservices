@@ -13,4 +13,5 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
     Optional<Subject> findByName(String name);
     List<Subject> findSubjectsBySpecialization_Name(String specializationName);
     boolean existsByNameAndSpecialization_Name(String name, String specializationName);
+    void deleteSubjectByName(String name);
 }

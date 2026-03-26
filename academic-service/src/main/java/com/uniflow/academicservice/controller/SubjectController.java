@@ -38,4 +38,10 @@ public class SubjectController {
         subjectService.validateSubjectBelongsToSpecialization(subjectName, specializationName);
         return ResponseEntity.ok().build();
     }
+    @DeleteMapping("/delete/{name}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteSubject(@PathVariable String name) {
+        subjectService.deleteSubject(name);
+        return ResponseEntity.noContent().build();
+    }
 }

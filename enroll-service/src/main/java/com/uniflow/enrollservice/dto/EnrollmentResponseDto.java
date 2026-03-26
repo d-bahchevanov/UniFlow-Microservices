@@ -1,5 +1,6 @@
 package com.uniflow.enrollservice.dto;
 
+import com.uniflow.enrollservice.enums.EnrollmentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,4 +12,5 @@ public class EnrollmentResponseDto {
     private String specializationName;
     private String subjectName;
     private int semester;
+    private EnrollmentStatus status;
 }

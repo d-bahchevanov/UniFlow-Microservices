@@ -11,5 +11,6 @@ public interface SubjectService {
     List<SubjectResponseDto> getAllSubjects();
     void validateSubjectBelongsToSpecialization(String subject, String specialization);
     boolean subjectExistsByName(String name);
+    void deleteSubject(String name);
 }
 

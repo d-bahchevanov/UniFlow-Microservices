@@ -8,6 +8,7 @@ import com.uniflow.academicservice.model.Specialization;
 import com.uniflow.academicservice.repository.FacultyRepository;
 import com.uniflow.academicservice.repository.SpecializationRepository;
 import com.uniflow.academicservice.service.FacultyService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -47,5 +48,14 @@ public class FacultyServiceImpl implements FacultyService {
         List<Specialization> specialization = specializationRepository.findSpecializationsByFaculty_Name(faculty.getName());
         List<DomainNameDto> list = specialization.stream().map(s -> new DomainNameDto(s.getName())).toList();
         return new FacultyResponseDto(faculty.getName(), list);
+    }
+
+    @Override
+    @Transactional
+    public void deleteFaculty(String name) {
+        if (!facultyRepository.existsFacultyByName(name)) {
+            throw new FacultyNotFoundException("No such faculty exists");
+        }
+        facultyRepository.deleteFacultyByName(name);
     }
 }

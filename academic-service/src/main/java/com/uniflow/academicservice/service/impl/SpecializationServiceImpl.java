@@ -11,6 +11,7 @@ import com.uniflow.academicservice.repository.FacultyRepository;
 import com.uniflow.academicservice.repository.SpecializationRepository;
 import com.uniflow.academicservice.repository.SubjectRepository;
 import com.uniflow.academicservice.service.SpecializationService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -99,5 +100,14 @@ public class SpecializationServiceImpl implements SpecializationService {
                     "Specialization does not belong to the given faculty"
             );
         }
+    }
+
+    @Override
+    @Transactional
+    public void deleteSpecialization(String name) {
+        if (!specializationRepository.existsSpecializationByName(name)) {
+            throw new SpecializationNotFoundException("No such specialization exists");
+        }
+        specializationRepository.deleteSpecializationByName(name);
     }
 }

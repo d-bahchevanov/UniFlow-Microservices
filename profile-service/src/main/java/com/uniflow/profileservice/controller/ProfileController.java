@@ -26,7 +26,6 @@ public class ProfileController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> createProfile(@RequestBody CreateProfileRequest request) {
         profileService.createProfile(request);
-
         return ResponseEntity.ok().build();
     }
     @GetMapping("/me")
@@ -54,6 +53,12 @@ public class ProfileController {
     @PutMapping("/profile/update/{username}")
     public ResponseEntity<AdminUpdateResponseDto> updateProfileByAdmin(@PathVariable String username,  @RequestBody @Valid AdminUpdateRequestDto adminRequestDto) {
         return ResponseEntity.ok(profileService.updateProfileByAdmin(username, adminRequestDto));
+    }
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteProfile(@PathVariable Long id) {
+        profileService.deleteProfile(id);
+        return ResponseEntity.noContent().build();
     }
 }
 

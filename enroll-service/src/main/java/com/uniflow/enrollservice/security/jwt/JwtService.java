@@ -28,6 +28,10 @@ public class JwtService {
         Claims claims = extractClaims(token);
         return claims.getSubject();
     }
+    public String extractRole(String token) {
+        Claims claims = extractClaims(token);
+        return claims.get("role", String.class);
+    }
     public boolean isTokenValid(String token) {
         try {
             Claims claims = extractClaims(token);

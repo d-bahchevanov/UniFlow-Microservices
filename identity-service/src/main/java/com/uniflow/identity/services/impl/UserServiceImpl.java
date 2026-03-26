@@ -41,6 +41,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         profileClient.createProfile(
                 new CreateProfileRequest(
                         user.getId(),
+                        user.getFirstName(),
+                        user.getLastName(),
                         user.getUsername(),
                         user.getEmail(),
                         user.getPassword(),
@@ -71,6 +73,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         String token = jwtService.generateToken(user);
         return new LoginResponseDto(token);
     }
+
+    @Override
+    @Transactional
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException("No such user exists");
+        }
+        profileClient.deleteProfile(id);
+        userRepository.deleteUserById(id);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) {
        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UserNotFoundException("No user with this username"));

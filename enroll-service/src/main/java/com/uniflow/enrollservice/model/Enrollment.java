@@ -35,5 +35,6 @@ public class Enrollment {
         this.specializationName = specializationName;
         this.subjectName = subjectName;
         this.semester = semester;
+        this.status = enrollmentStatus;
     }
 }

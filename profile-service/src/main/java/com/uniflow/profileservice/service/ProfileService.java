@@ -21,4 +21,5 @@ public interface ProfileService extends UserDetailsService {
     UpdateOwnProfileResponseDto updateOwnProfile(ProfileRequestDto profileRequestDto);
     AdminUpdateResponseDto updateProfileByAdmin(String username, AdminUpdateRequestDto adminUpdateRequestDto);
     void createProfile(CreateProfileRequest request);
+    void deleteProfile(Long id);
 }

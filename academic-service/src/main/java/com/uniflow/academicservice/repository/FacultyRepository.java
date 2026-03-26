@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface FacultyRepository extends JpaRepository<Faculty, Long> {
     boolean existsFacultyByName(String name);
     Optional<Faculty> getFacultyByName(String name);
+    void deleteFacultyByName(String name);
 }

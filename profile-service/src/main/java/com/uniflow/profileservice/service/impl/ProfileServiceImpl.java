@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +31,7 @@ import static org.springframework.security.core.userdetails.User.builder;
 public class ProfileServiceImpl implements ProfileService {
     private final ProfileRepository profileRepository;
     @Override
+    @Transactional
     public void createProfile(CreateProfileRequest request) {
 
         profileRepository.findByUserId(request.userId())
@@ -39,6 +41,8 @@ public class ProfileServiceImpl implements ProfileService {
 
         Profile profile = Profile.builder()
                 .userId(request.userId())
+                .firstName(request.firstName())
+                .lastName(request.lastName())
                 .username(request.username())
                 .email(request.email())
                 .password(request.password())
@@ -47,6 +51,13 @@ public class ProfileServiceImpl implements ProfileService {
 
         profileRepository.save(profile);
     }
+
+    @Override
+    @Transactional
+    public void deleteProfile(Long id) {
+        profileRepository.deleteProfileByUserId(id);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) {
         Profile profile = profileRepository.findProfileByUsername(username).orElseThrow(() -> new UsernameNotFoundException("No profile with this username"));

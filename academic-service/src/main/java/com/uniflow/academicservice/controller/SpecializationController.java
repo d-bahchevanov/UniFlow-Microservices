@@ -38,4 +38,10 @@ public class SpecializationController {
         specializationService.validateSpecializationBelongsToFaculty(specializationName, facultyName);
         return ResponseEntity.ok().build();
     }
+    @DeleteMapping("/delete/{name}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteSpecialization(@PathVariable String name) {
+        specializationService.deleteSpecialization(name);
+        return ResponseEntity.noContent().build();
+    }
 }

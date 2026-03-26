@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface SpecializationRepository extends JpaRepository<Specialization, Long> {
     boolean existsSpecializationByName(String name);
     Optional<Specialization> findByName(String name);
-    //Optional<List<Specialization>> findSpecializationsByFaculty_Name(String facultyName);
     List<Specialization> findSpecializationsByFaculty_Name(String facultyName);
+    void deleteSpecializationByName(String name);
 }
