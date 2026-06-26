@@ -11,5 +11,7 @@ public interface FacultyService {
     String createFaculty(String name);
     FacultyResponseDto getFacultyByName(String name);
     void deleteFaculty(String name);
+    FacultyResponseDto getFacultyById(Long id);
+    void validateFaculty(Long id);
 }
 

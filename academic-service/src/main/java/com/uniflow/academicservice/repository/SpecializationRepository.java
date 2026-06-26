@@ -13,4 +13,6 @@ public interface SpecializationRepository extends JpaRepository<Specialization, 
     Optional<Specialization> findByName(String name);
     List<Specialization> findSpecializationsByFaculty_Name(String facultyName);
     void deleteSpecializationByName(String name);
+    Optional<Specialization> getSpecializationById(long id);
+    boolean existsSpecializationByIdAndFaculty_Id(long id, long facultyId);
 }

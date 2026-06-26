@@ -34,7 +34,7 @@ public class GatewayserverApplication {
                         .path("/uniflow/academic/**")
                         .filters( f -> f.filter(jwtGatewayFilter).rewritePath("/uniflow/academic/(?<segment>.*)","/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://ACADEMY"))
+                        .uri("lb://ACADEMIC"))
                 .route(p -> p.path("/uniflow/enroll/**")
                 .filters( f -> f.filter(jwtGatewayFilter).rewritePath("/uniflow/enroll/(?<segment>.*)","/${segment}")
                         .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))

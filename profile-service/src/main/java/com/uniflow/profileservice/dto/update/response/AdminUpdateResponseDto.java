@@ -7,8 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class AdminUpdateResponseDto {
-    private String faculty;
-    private String specialization;
+    private Long facultyId;
+    private Long specializationId;
     private int yearOfStudy;
     private AcademicTitle academicTitle;
 }

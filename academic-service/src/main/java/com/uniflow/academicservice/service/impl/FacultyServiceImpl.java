@@ -1,6 +1,8 @@
 package com.uniflow.academicservice.service.impl;
 import com.uniflow.academicservice.dto.DomainNameDto;
 import com.uniflow.academicservice.dto.FacultyResponseDto;
+import com.uniflow.academicservice.dto.SpecializationResponseDto;
+import com.uniflow.academicservice.dto.SubjectResponseDto;
 import com.uniflow.academicservice.exception.domain.faculty.FacultyExistsException;
 import com.uniflow.academicservice.exception.domain.faculty.FacultyNotFoundException;
 import com.uniflow.academicservice.model.Faculty;
@@ -13,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -57,5 +60,21 @@ public class FacultyServiceImpl implements FacultyService {
             throw new FacultyNotFoundException("No such faculty exists");
         }
         facultyRepository.deleteFacultyByName(name);
+    }
+
+    @Override
+    public FacultyResponseDto getFacultyById(Long id) {
+        Faculty faculty = facultyRepository.getFacultyById(id).orElseThrow(() -> new FacultyNotFoundException("No such faculty exists"));
+        List<DomainNameDto> specializationList = specializationRepository.findSpecializationsByFaculty_Name(faculty.getName())
+                .stream()
+                .map(s -> new DomainNameDto(s.getName()))
+                .toList();
+        return new FacultyResponseDto(faculty.getName(), specializationList);
+    }
+    @Override
+    public void validateFaculty(Long id) {
+        facultyRepository.findById(id)
+                .orElseThrow(() ->
+                        new FacultyNotFoundException("Faculty with this id does not exist"));
     }
 }

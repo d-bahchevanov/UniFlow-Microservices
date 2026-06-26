@@ -12,7 +12,7 @@ public class ProfessorProfileResponseDto implements ProfileResponseDto {
     private String username;
     private String firstName;
     private String lastName;
-    private String faculty;
+    private Long facultyId;
     private AcademicTitle academicTitle;
     private Role role;
 }

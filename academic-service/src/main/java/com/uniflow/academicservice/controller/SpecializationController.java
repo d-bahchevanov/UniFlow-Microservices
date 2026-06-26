@@ -1,5 +1,6 @@
 package com.uniflow.academicservice.controller;
 
+import com.uniflow.academicservice.dto.FacultySpecializationValidationRequest;
 import com.uniflow.academicservice.dto.SpecializationResponseDto;
 import com.uniflow.academicservice.service.SpecializationService;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,11 @@ public class SpecializationController {
     public ResponseEntity<List<SpecializationResponseDto>> getAllSpecializations() {
         return ResponseEntity.ok(specializationService.getAllSpecializations());
     }
+    @GetMapping("/admin/get/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<SpecializationResponseDto> getSpecializationById(@PathVariable Long id) {
+        return ResponseEntity.ok(specializationService.getSpecializationById(id));
+    }
     @GetMapping("/get/{specializationName}")
     public ResponseEntity<SpecializationResponseDto> getSpecializationByName(@PathVariable String specializationName) {
         return ResponseEntity.ok(specializationService.getSpecializationByName(specializationName));
@@ -43,5 +49,10 @@ public class SpecializationController {
     public ResponseEntity<Void> deleteSpecialization(@PathVariable String name) {
         specializationService.deleteSpecialization(name);
         return ResponseEntity.noContent().build();
+    }
+    @PostMapping("/validate/faculty-specialization")
+    public ResponseEntity<Void> validateFacultySpecialization(@RequestBody FacultySpecializationValidationRequest request) {
+        specializationService.validateFacultySpecialization(request);
+        return ResponseEntity.ok().build();
     }
 }

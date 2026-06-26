@@ -1,4 +1,5 @@
 package com.uniflow.academicservice.service.impl;
+import com.uniflow.academicservice.dto.FacultySpecializationValidationRequest;
 import com.uniflow.academicservice.dto.SpecializationResponseDto;
 import com.uniflow.academicservice.dto.DomainNameDto;
 import com.uniflow.academicservice.exception.domain.faculty.FacultyNotFoundException;
@@ -7,6 +8,7 @@ import com.uniflow.academicservice.exception.domain.specialization.Specializatio
 import com.uniflow.academicservice.exception.domain.specialization.SpecializationNotFoundException;
 import com.uniflow.academicservice.model.Faculty;
 import com.uniflow.academicservice.model.Specialization;
+import com.uniflow.academicservice.model.Subject;
 import com.uniflow.academicservice.repository.FacultyRepository;
 import com.uniflow.academicservice.repository.SpecializationRepository;
 import com.uniflow.academicservice.repository.SubjectRepository;
@@ -24,6 +26,7 @@ public class SpecializationServiceImpl implements SpecializationService {
     private final SpecializationRepository specializationRepository;
     private final FacultyRepository facultyRepository;
     private final SubjectRepository subjectRepository;
+
     @Override
     public SpecializationResponseDto createSpecialization(String specializationName, String facultyName) {
         if (specializationRepository.existsSpecializationByName(specializationName)) {
@@ -109,5 +112,29 @@ public class SpecializationServiceImpl implements SpecializationService {
             throw new SpecializationNotFoundException("No such specialization exists");
         }
         specializationRepository.deleteSpecializationByName(name);
+    }
+
+    @Override
+    public SpecializationResponseDto getSpecializationById(Long id) {
+        if (!specializationRepository.existsById(id)) {
+            throw new SpecializationNotFoundException("No such specialization exists");
+        }
+        Specialization specialization = specializationRepository.findById(id)
+                .orElseThrow(() ->
+                        new SpecializationNotFoundException("No specialization with such ID")
+                );
+        List<DomainNameDto> subjects = subjectRepository.findSubjectsBySpecialization_Name(specialization.getName())
+                .stream()
+                .map(s -> new DomainNameDto(s.getName()))
+                .toList();
+        return new SpecializationResponseDto(specialization.getName(), specialization.getFaculty().getName(), subjects);
+    }
+
+    @Override
+    public void validateFacultySpecialization(FacultySpecializationValidationRequest request) {
+        boolean exists = specializationRepository.existsSpecializationByIdAndFaculty_Id(request.getSpecializationId(), request.getFacultyId());
+        if (!exists) {
+            throw new SpecializationFacultyMismatchException("No specialization in this faculty");
+        }
     }
 }

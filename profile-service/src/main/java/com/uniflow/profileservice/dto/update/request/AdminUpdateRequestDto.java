@@ -9,8 +9,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class AdminUpdateRequestDto {
-    private String faculty;
-    private String specialization;
+    private Long facultyId;
+    private Long specializationId;
     @Min(value = 1)
     @Max(value = 6)
     private Integer yearOfStudy;

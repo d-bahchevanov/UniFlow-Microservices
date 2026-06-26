@@ -20,4 +20,13 @@ security:
   jwt:
     secret-key: 8pFcrOSF8T9yq2ccOwkmecKcStATsrMftKCFVzdCqXeD5biqlt
     issuer: uniflow-identity-service
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+  instance:
+    prefer-ip-address: true
 

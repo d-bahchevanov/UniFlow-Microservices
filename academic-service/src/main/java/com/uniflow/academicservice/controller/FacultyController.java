@@ -28,10 +28,21 @@ public class FacultyController {
     public ResponseEntity<FacultyResponseDto> getFacultyByName(@PathVariable String name) {
         return ResponseEntity.ok(facultyService.getFacultyByName(name));
     }
+    @GetMapping("/admin/get/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<FacultyResponseDto> getFacultyById(@PathVariable Long id) {
+        return ResponseEntity.ok(facultyService.getFacultyById(id));
+    }
     @DeleteMapping("/delete/{name}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteFaculty(@PathVariable String name) {
         facultyService.deleteFaculty(name);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/exists/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> validateFaculty(@PathVariable Long id) {
+        facultyService.validateFaculty(id);
+        return ResponseEntity.ok().build();
     }
 }

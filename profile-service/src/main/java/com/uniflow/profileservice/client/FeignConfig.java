@@ -1,4 +1,4 @@
-package com.uniflow.identity.client;
+package com.uniflow.profileservice.client;
 
 import feign.RequestInterceptor;
 import jakarta.servlet.http.HttpServletRequest;

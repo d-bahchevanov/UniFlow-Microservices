@@ -25,8 +25,8 @@ public class Profile {
     private String password;
     private String firstName;
     private String lastName;
-    private String faculty;
-    private String specialization;
+    private Long facultyId;
+    private Long specializationId;
     private int yearOfStudy;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

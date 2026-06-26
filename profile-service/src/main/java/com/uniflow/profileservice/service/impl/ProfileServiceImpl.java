@@ -1,5 +1,7 @@
 package com.uniflow.profileservice.service.impl;
+import com.uniflow.profileservice.client.AcademyClient;
 import com.uniflow.profileservice.dto.profile.request.CreateProfileRequest;
+import com.uniflow.profileservice.dto.profile.request.FacultySpecializationValidationRequest;
 import com.uniflow.profileservice.dto.profile.response.AdminProfileResponseDto;
 import com.uniflow.profileservice.dto.profile.response.StudentProfileResponseDto;
 import com.uniflow.profileservice.dto.update.request.AdminUpdateRequestDto;
@@ -30,15 +32,14 @@ import static org.springframework.security.core.userdetails.User.builder;
 @AllArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
     private final ProfileRepository profileRepository;
+    private final AcademyClient academyClient;
     @Override
     @Transactional
     public void createProfile(CreateProfileRequest request) {
-
         profileRepository.findByUserId(request.userId())
                 .ifPresent(profile -> {
                     throw new ProfileAlreadyExistException("Profile already exists for user");
                 });
-
         Profile profile = Profile.builder()
                 .userId(request.userId())
                 .firstName(request.firstName())
@@ -83,8 +84,8 @@ public class ProfileServiceImpl implements ProfileService {
                         p.getUsername(),
                         p.getFirstName(),
                         p.getLastName(),
-                        p.getFaculty(),
-                        p.getSpecialization(),
+                        p.getFacultyId(),
+                        p.getSpecializationId(),
                         p.getYearOfStudy(),
                         p.getRole(),
                         p.getAcademicTitle()
@@ -107,7 +108,7 @@ public class ProfileServiceImpl implements ProfileService {
                         p.getUsername(),
                         p.getFirstName(),
                         p.getLastName(),
-                        p.getFaculty(),
+                        p.getFacultyId(),
                         p.getAcademicTitle(),
                         p.getRole()))
                 .toList();
@@ -117,9 +118,9 @@ public class ProfileServiceImpl implements ProfileService {
     public ProfileResponseDto viewProfileByUsername(String username) {
         Profile profile = profileRepository.findProfileByUsername(username).orElseThrow(() -> new ProfileNotFoundException("No profile with this username"));
         if (profile.getRole() == Role.STUDENT) {
-            return new StudentProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getSpecialization(), profile.getYearOfStudy(), profile.getRole(), profile.getAcademicTitle());
+            return new StudentProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFacultyId(), profile.getSpecializationId(), profile.getYearOfStudy(), profile.getRole(), profile.getAcademicTitle());
         }
-        return new ProfessorProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getAcademicTitle(), profile.getRole());
+        return new ProfessorProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFacultyId(), profile.getAcademicTitle(), profile.getRole());
     }
 
     @Override
@@ -131,10 +132,10 @@ public class ProfileServiceImpl implements ProfileService {
         Profile profile = profileRepository.findProfileByUsername(username)
                 .orElseThrow(() -> new ProfileNotFoundException("Profile not found"));
         if (profile.getRole() == Role.STUDENT) {
-            return new StudentProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getSpecialization(), profile.getYearOfStudy(), profile.getRole(), profile.getAcademicTitle());
+            return new StudentProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFacultyId(), profile.getSpecializationId(), profile.getYearOfStudy(), profile.getRole(), profile.getAcademicTitle());
         }
         else if (profile.getRole() == Role.PROFESSOR) {
-            return new ProfessorProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFaculty(), profile.getAcademicTitle(), profile.getRole());
+            return new ProfessorProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFacultyId(), profile.getAcademicTitle(), profile.getRole());
         }
         return new AdminProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getRole());
 }
@@ -166,12 +167,18 @@ public UpdateOwnProfileResponseDto updateOwnProfile(ProfileRequestDto profileReq
 @Override
 public AdminUpdateResponseDto updateProfileByAdmin(String username, AdminUpdateRequestDto adminUpdateRequestDto) {
     Profile profile = profileRepository.findProfileByUsername(username).orElseThrow(() -> new ProfileNotFoundException("This profile does not exist"));
-    if (adminUpdateRequestDto.getFaculty() != null) {
-        profile.setFaculty(adminUpdateRequestDto.getFaculty());
+    Long effectiveFacultyId =
+            adminUpdateRequestDto.getFacultyId() != null
+                    ? adminUpdateRequestDto.getFacultyId()
+                    : profile.getFacultyId();
+    if (adminUpdateRequestDto.getFacultyId()!= null) {
+        academyClient.validateFaculty(effectiveFacultyId);
+        profile.setFacultyId(adminUpdateRequestDto.getFacultyId());
     }
-
-    if (adminUpdateRequestDto.getSpecialization() != null && profile.getRole() == Role.STUDENT) {
-        profile.setSpecialization(adminUpdateRequestDto.getSpecialization());
+    if (adminUpdateRequestDto.getSpecializationId() != null && profile.getRole() == Role.STUDENT) {
+        FacultySpecializationValidationRequest validationRequest = new FacultySpecializationValidationRequest(effectiveFacultyId, adminUpdateRequestDto.getSpecializationId());
+        academyClient.validateFacultySpecialization(validationRequest);
+        profile.setSpecializationId(adminUpdateRequestDto.getSpecializationId());
     }
 
     if (adminUpdateRequestDto.getYearOfStudy() != null && profile.getRole() == Role.STUDENT) {
@@ -183,6 +190,6 @@ public AdminUpdateResponseDto updateProfileByAdmin(String username, AdminUpdateR
     }
 
     profileRepository.save(profile);
-    return new AdminUpdateResponseDto(profile.getFaculty(), profile.getSpecialization(), profile.getYearOfStudy(), profile.getAcademicTitle());
+    return new AdminUpdateResponseDto(profile.getFacultyId(), profile.getSpecializationId(), profile.getYearOfStudy(), profile.getAcademicTitle());
     }
 }
