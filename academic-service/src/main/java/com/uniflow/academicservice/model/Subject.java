@@ -16,9 +16,11 @@ public class Subject {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "specialization_id")
     private Specialization specialization;
-
-    public Subject(String name, Specialization specialization) {
+    @Column(nullable = false)
+    private int year;
+    public Subject(String name, Specialization specialization, int year) {
         this.name = name;
         this.specialization = specialization;
+        this.year = year;
     }
 }

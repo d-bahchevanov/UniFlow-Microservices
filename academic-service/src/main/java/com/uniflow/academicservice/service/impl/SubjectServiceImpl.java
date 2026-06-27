@@ -1,5 +1,9 @@
 package com.uniflow.academicservice.service.impl;
+import com.uniflow.academicservice.client.ProfileClient;
+import com.uniflow.academicservice.dto.DomainNameDto;
+import com.uniflow.academicservice.dto.SubjectCreateDto;
 import com.uniflow.academicservice.dto.SubjectResponseDto;
+import com.uniflow.academicservice.dto.client.StudentAcademicInfoDto;
 import com.uniflow.academicservice.exception.domain.specialization.SpecializationFacultyMismatchException;
 import com.uniflow.academicservice.exception.domain.specialization.SpecializationNotFoundException;
 import com.uniflow.academicservice.exception.domain.subject.SubjectExistsException;
@@ -9,6 +13,8 @@ import com.uniflow.academicservice.model.Specialization;
 import com.uniflow.academicservice.model.Subject;
 import com.uniflow.academicservice.repository.SpecializationRepository;
 import com.uniflow.academicservice.repository.SubjectRepository;
+import com.uniflow.academicservice.security.jwt.JwtProperties;
+import com.uniflow.academicservice.security.jwt.JwtService;
 import com.uniflow.academicservice.service.SubjectService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -21,35 +27,35 @@ import java.util.List;
 public class SubjectServiceImpl implements SubjectService {
     private final SubjectRepository subjectRepository;
     private final SpecializationRepository specializationRepository;
-
+    private final ProfileClient profileClient;
     @Override
     public List<SubjectResponseDto> getSubjectsBySpecialization(String specializationName) {
         return subjectRepository.findSubjectsBySpecialization_Name(specializationName).stream()
-                .map(s -> new SubjectResponseDto(s.getName(), s.getSpecialization().getName()))
+                .map(s -> new SubjectResponseDto(s.getName(), s.getSpecialization().getName(), s.getYear()))
                 .toList();
     }
 
     @Override
     public SubjectResponseDto getSubjectByName(String name) {
         Subject subject = subjectRepository.findByName(name).orElseThrow(() -> new SubjectNotFoundException("No such subject"));
-        return new SubjectResponseDto(subject.getName(), subject.getSpecialization().getName());
+        return new SubjectResponseDto(subject.getName(), subject.getSpecialization().getName(), subject.getYear());
     }
 
     @Override
-    public SubjectResponseDto createSubject(String subjectName, String specializationName) {
-        if (subjectExistsByName(subjectName)) {
+    public SubjectResponseDto createSubject(SubjectCreateDto subjectCreateDto) {
+        if (subjectExistsByName(subjectCreateDto.getSubjectName())) {
             throw new SubjectExistsException("Subject already exists");
         }
-        Specialization specialization = specializationRepository.findByName(specializationName).orElseThrow(() -> new SpecializationNotFoundException("No such specialization"));
-        Subject subject = new Subject(subjectName, specialization);
+        Specialization specialization = specializationRepository.findByName(subjectCreateDto.getSpecializationName()).orElseThrow(() -> new SpecializationNotFoundException("No such specialization"));
+        Subject subject = new Subject(subjectCreateDto.getSubjectName(), specialization, subjectCreateDto.getYear());
         subjectRepository.save(subject);
-        return new SubjectResponseDto(subjectName, specializationName);
+        return new SubjectResponseDto(subject.getName(), subject.getSpecialization().getName(), subject.getYear());
     }
 
     @Override
     public List<SubjectResponseDto> getAllSubjects() {
         return subjectRepository.findAll().stream()
-                .map(s -> new SubjectResponseDto(s.getName(), s.getSpecialization().getName()))
+                .map(s -> new SubjectResponseDto(s.getName(), s.getSpecialization().getName(), s.getYear()))
                 .toList();
     }
 
@@ -79,5 +85,12 @@ public class SubjectServiceImpl implements SubjectService {
             throw new SubjectNotFoundException("No such subject exists");
         }
         subjectRepository.deleteSubjectByName(name);
+    }
+
+    @Override
+    public List<DomainNameDto> getAvailableSubjectsToEnroll() {
+        StudentAcademicInfoDto info = profileClient.getStudentAcademicInfo();
+        List<DomainNameDto> subjects = subjectRepository.getSubjectBySpecialization_IdAndYear(info.getSpecializationId(), info.getYearOfStudy());
+        return subjects.stream().toList();
     }
 }

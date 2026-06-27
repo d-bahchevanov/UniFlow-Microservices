@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class EnrollmentResponseDto {
+    private Long studentId;
     private String facultyName;
     private String specializationName;
     private String subjectName;

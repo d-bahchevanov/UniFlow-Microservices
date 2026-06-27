@@ -1,6 +1,9 @@
 package com.uniflow.academicservice.controller;
 
+import com.uniflow.academicservice.dto.DomainNameDto;
+import com.uniflow.academicservice.dto.SubjectCreateDto;
 import com.uniflow.academicservice.dto.SubjectResponseDto;
+import com.uniflow.academicservice.dto.client.StudentAcademicInfoDto;
 import com.uniflow.academicservice.service.SubjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,8 +20,8 @@ public class SubjectController {
     private final SubjectService subjectService;
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<SubjectResponseDto> createSubject(@RequestParam String subjectName, @RequestParam String specializationName) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(subjectService.createSubject(subjectName, specializationName));
+    public ResponseEntity<SubjectResponseDto> createSubject(@RequestBody SubjectCreateDto subjectCreateDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(subjectService.createSubject(subjectCreateDto));
     }
     @GetMapping("/get")
     public ResponseEntity<List<SubjectResponseDto>> getAllSubjects() {
@@ -43,5 +46,10 @@ public class SubjectController {
     public ResponseEntity<Void> deleteSubject(@PathVariable String name) {
         subjectService.deleteSubject(name);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/available")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<List<DomainNameDto>> getAvailableSubjectsToEnroll() {
+        return ResponseEntity.ok(subjectService.getAvailableSubjectsToEnroll());
     }
 }

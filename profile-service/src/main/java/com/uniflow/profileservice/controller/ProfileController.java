@@ -1,6 +1,7 @@
 package com.uniflow.profileservice.controller;
 
 import com.uniflow.profileservice.dto.profile.request.CreateProfileRequest;
+import com.uniflow.profileservice.dto.profile.response.StudentAcademicInfoDto;
 import com.uniflow.profileservice.dto.profile.response.StudentProfileResponseDto;
 import com.uniflow.profileservice.dto.update.request.AdminUpdateRequestDto;
 import com.uniflow.profileservice.dto.update.response.AdminUpdateResponseDto;
@@ -59,6 +60,10 @@ public class ProfileController {
     public ResponseEntity<Void> deleteProfile(@PathVariable Long id) {
         profileService.deleteProfile(id);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/academic-info")
+    public ResponseEntity<StudentAcademicInfoDto> getStudentAcademicInfo() {
+        return ResponseEntity.ok(profileService.getStudentAcademicInfo());
     }
 }
 

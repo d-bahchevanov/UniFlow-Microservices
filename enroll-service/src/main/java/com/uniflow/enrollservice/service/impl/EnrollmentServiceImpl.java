@@ -1,5 +1,7 @@
 package com.uniflow.enrollservice.service.impl;
 
+import com.uniflow.enrollservice.client.AcademyClient;
+import com.uniflow.enrollservice.dto.DomainNameDto;
 import com.uniflow.enrollservice.dto.EnrollmentRequestDto;
 import com.uniflow.enrollservice.dto.EnrollmentResponseDto;
 import com.uniflow.enrollservice.enums.EnrollmentStatus;
@@ -22,7 +24,7 @@ import static com.uniflow.enrollservice.enums.EnrollmentStatus.*;
 @Service
 public class EnrollmentServiceImpl implements EnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
-
+    private final AcademyClient academyClient;
     @Override
     public EnrollmentResponseDto enrollStudent(EnrollmentRequestDto enrollmentRequestDto) {
         if (enrollmentRepository.findByStudentIdAndSubjectNameAndSemester(enrollmentRequestDto.getStudentId(), enrollmentRequestDto.getSubjectName(), enrollmentRequestDto.getSemester()).isPresent()) {
@@ -132,5 +134,11 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .filter(enrollmentResponseDto -> enrollmentResponseDto.getStatus() != PENDING &&
                         enrollmentResponseDto.getStatus() != REJECTED)
                 .toList();
+    }
+
+    @Override
+    public List<DomainNameDto> getAvailableSubjectsToEnroll() {
+        List<DomainNameDto> subjects = academyClient.getAvailableSubjects();
+        return subjects.stream().toList();
     }
 }

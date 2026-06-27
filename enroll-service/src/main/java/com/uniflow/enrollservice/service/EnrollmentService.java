@@ -1,5 +1,6 @@
 package com.uniflow.enrollservice.service;
 
+import com.uniflow.enrollservice.dto.DomainNameDto;
 import com.uniflow.enrollservice.dto.EnrollmentRequestDto;
 import com.uniflow.enrollservice.dto.EnrollmentResponseDto;
 import com.uniflow.enrollservice.model.Enrollment;
@@ -29,4 +30,5 @@ public interface EnrollmentService {
     List<EnrollmentResponseDto> getEnrollmentsByStudent(Long studentId);
 
     List<EnrollmentResponseDto> getEnrollmentsBySubject(String subjectName);
+    List<DomainNameDto> getAvailableSubjectsToEnroll();
 }

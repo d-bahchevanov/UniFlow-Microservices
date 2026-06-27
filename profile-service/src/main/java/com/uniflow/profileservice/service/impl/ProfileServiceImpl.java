@@ -3,6 +3,7 @@ import com.uniflow.profileservice.client.AcademyClient;
 import com.uniflow.profileservice.dto.profile.request.CreateProfileRequest;
 import com.uniflow.profileservice.dto.profile.request.FacultySpecializationValidationRequest;
 import com.uniflow.profileservice.dto.profile.response.AdminProfileResponseDto;
+import com.uniflow.profileservice.dto.profile.response.StudentAcademicInfoDto;
 import com.uniflow.profileservice.dto.profile.response.StudentProfileResponseDto;
 import com.uniflow.profileservice.dto.update.request.AdminUpdateRequestDto;
 import com.uniflow.profileservice.dto.update.response.AdminUpdateResponseDto;
@@ -15,8 +16,11 @@ import com.uniflow.profileservice.exception.domain.ProfileAlreadyExistException;
 import com.uniflow.profileservice.exception.domain.ProfileNotFoundException;
 import com.uniflow.profileservice.model.Profile;
 import com.uniflow.profileservice.repository.ProfileRepository;
+import com.uniflow.profileservice.security.jwt.JwtService;
 import com.uniflow.profileservice.service.ProfileService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -57,6 +61,21 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional
     public void deleteProfile(Long id) {
         profileRepository.deleteProfileByUserId(id);
+    }
+
+    @Override
+    public StudentAcademicInfoDto getStudentAcademicInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        Profile profile = profileRepository.findProfileByUsername(username)
+                .orElseThrow(() -> new ProfileNotFoundException("Profile not found"));
+
+        return new StudentAcademicInfoDto(
+                profile.getSpecializationId(),
+                profile.getYearOfStudy()
+        );
     }
 
     @Override
