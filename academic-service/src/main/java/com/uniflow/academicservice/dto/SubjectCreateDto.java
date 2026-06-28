@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class SubjectCreateDto {
-    String specializationName;
-    String subjectName;
-    int year;
+    private String specializationName;
+    private String subjectName;
+    private int year;
 }

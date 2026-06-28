@@ -22,19 +22,19 @@ public class Enrollment {
     private String facultyName;
     private String specializationName;
     private String subjectName;
-    private int semester;
+    private int year;
     @Setter
     private Integer points = 0;
     @Setter
     @Enumerated(EnumType.STRING)
     private EnrollmentStatus status;
 
-    public Enrollment(Long studentId, String facultyName, String specializationName, String subjectName, int semester, EnrollmentStatus enrollmentStatus) {
+    public Enrollment(Long studentId, String facultyName, String specializationName, String subjectName, int year, EnrollmentStatus enrollmentStatus) {
         this.studentId = studentId;
         this.facultyName = facultyName;
         this.specializationName = specializationName;
         this.subjectName = subjectName;
-        this.semester = semester;
+        this.year = year;
         this.status = enrollmentStatus;
     }
 }

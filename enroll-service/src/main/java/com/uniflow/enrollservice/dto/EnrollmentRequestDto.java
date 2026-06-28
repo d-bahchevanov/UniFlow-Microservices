@@ -11,6 +11,6 @@ public class EnrollmentRequestDto {
     private String facultyName;
     private String specializationName;
     private String subjectName;
-    private int semester;
+    private int year;
     //Need to make subject validation so student should only give subject name to enroll
 }

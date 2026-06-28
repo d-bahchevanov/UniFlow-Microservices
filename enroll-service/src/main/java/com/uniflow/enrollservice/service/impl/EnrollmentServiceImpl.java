@@ -27,22 +27,28 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private final AcademyClient academyClient;
     @Override
     public EnrollmentResponseDto enrollStudent(EnrollmentRequestDto enrollmentRequestDto) {
-        if (enrollmentRepository.findByStudentIdAndSubjectNameAndSemester(enrollmentRequestDto.getStudentId(), enrollmentRequestDto.getSubjectName(), enrollmentRequestDto.getSemester()).isPresent()) {
+        if (enrollmentRepository.existsByStudentIdAndSubjectNameAndYear(enrollmentRequestDto.getStudentId(), enrollmentRequestDto.getSubjectName(), enrollmentRequestDto.getYear())) {
             throw new EnrollmentAlreadyExistsException("This enrollment for this student already exists");
         }
-        Enrollment enrollment = new Enrollment(enrollmentRequestDto.getStudentId(),
-                enrollmentRequestDto.getFacultyName(),
-                enrollmentRequestDto.getSpecializationName(),
-                enrollmentRequestDto.getSubjectName(),
-                enrollmentRequestDto.getSemester(),
-                PENDING);
-        enrollmentRepository.save(enrollment);
-        return new EnrollmentResponseDto(enrollmentRequestDto.getStudentId(),
-                enrollmentRequestDto.getFacultyName(),
-                enrollmentRequestDto.getSpecializationName(),
-                enrollmentRequestDto.getSubjectName(),
-                enrollmentRequestDto.getSemester(),
-                PENDING);
+        List<DomainNameDto> availableSubjects = getAvailableSubjectsToEnroll();
+        //List<String> availableSubjects = getAvailableSubjectsToEnroll().stream().map(DomainNameDto::getName).toList();
+        if (availableSubjects.contains(enrollmentRequestDto.getSubjectName())) {
+            Enrollment enrollment = new Enrollment(enrollmentRequestDto.getStudentId(),
+                    enrollmentRequestDto.getFacultyName(),
+                    enrollmentRequestDto.getSpecializationName(),
+                    enrollmentRequestDto.getSubjectName(),
+                    enrollmentRequestDto.getYear(),
+                    PENDING);
+            enrollmentRepository.save(enrollment);
+            return new EnrollmentResponseDto(enrollmentRequestDto.getStudentId(),
+                    enrollmentRequestDto.getFacultyName(),
+                    enrollmentRequestDto.getSpecializationName(),
+                    enrollmentRequestDto.getSubjectName(),
+                    enrollmentRequestDto.getYear(),
+                    PENDING);
+        } else {
+            throw new InvalidEnrollmentStateException("Subject is not available for enrollment");
+        }
     }
 
     @Override
