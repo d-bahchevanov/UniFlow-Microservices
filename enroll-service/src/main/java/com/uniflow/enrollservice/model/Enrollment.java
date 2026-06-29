@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Table(
         uniqueConstraints = @UniqueConstraint(
-                columnNames = {"studentId", "subjectName", "semester"}
+                columnNames = {"studentId", "subjectId"}
         )
 )
 public class Enrollment {
@@ -19,9 +19,9 @@ public class Enrollment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private Long studentId;
-    private String facultyName;
-    private String specializationName;
-    private String subjectName;
+    private long facultyId;
+    private long specializationId;
+    private long subjectId;
     private int year;
     @Setter
     private Integer points = 0;
@@ -29,11 +29,11 @@ public class Enrollment {
     @Enumerated(EnumType.STRING)
     private EnrollmentStatus status;
 
-    public Enrollment(Long studentId, String facultyName, String specializationName, String subjectName, int year, EnrollmentStatus enrollmentStatus) {
+    public Enrollment(Long studentId, long facultyId,long specializationId, long subjectId, int year, EnrollmentStatus enrollmentStatus) {
         this.studentId = studentId;
-        this.facultyName = facultyName;
-        this.specializationName = specializationName;
-        this.subjectName = subjectName;
+        this.facultyId = facultyId;
+        this.specializationId = specializationId;
+        this.subjectId = subjectId;
         this.year = year;
         this.status = enrollmentStatus;
     }

@@ -1,6 +1,6 @@
 package com.uniflow.enrollservice.client;
 
-import com.uniflow.enrollservice.dto.client.SubjectInfoDto;
+import com.uniflow.enrollservice.dto.client.StudentProfileResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -10,7 +10,7 @@ import java.util.List;
         name = "ACADEMIC",
         configuration = FeignConfig.class
 )
-public interface AcademyClient {
-    @GetMapping("/subject/available")
-    List<SubjectInfoDto> getAvailableSubjects();
+public interface ProfileClient {
+    @GetMapping("/api/profiles/me")
+    StudentProfileResponseDto getStudentProfileInfo();
 }

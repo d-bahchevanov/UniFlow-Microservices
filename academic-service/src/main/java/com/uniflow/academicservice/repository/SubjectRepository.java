@@ -1,6 +1,7 @@
 package com.uniflow.academicservice.repository;
 
 import com.uniflow.academicservice.dto.DomainNameDto;
+import com.uniflow.academicservice.dto.client.SubjectInfoDto;
 import com.uniflow.academicservice.model.Subject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,5 +16,5 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
     List<Subject> findSubjectsBySpecialization_Name(String specializationName);
     boolean existsByNameAndSpecialization_Name(String name, String specializationName);
     void deleteSubjectByName(String name);
-    List<DomainNameDto> getSubjectBySpecialization_IdAndYear(long id, int year);
+    List<Subject> getSubjectBySpecialization_IdAndYear(long specializationId, int year);
 }

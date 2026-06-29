@@ -4,6 +4,7 @@ import com.uniflow.academicservice.dto.DomainNameDto;
 import com.uniflow.academicservice.dto.SubjectCreateDto;
 import com.uniflow.academicservice.dto.SubjectResponseDto;
 import com.uniflow.academicservice.dto.client.StudentAcademicInfoDto;
+import com.uniflow.academicservice.dto.client.SubjectInfoDto;
 import com.uniflow.academicservice.service.SubjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -49,7 +50,7 @@ public class SubjectController {
     }
     @GetMapping("/available")
     @PreAuthorize("hasRole('STUDENT')")
-    public ResponseEntity<List<DomainNameDto>> getAvailableSubjectsToEnroll() {
+    public ResponseEntity<List<SubjectInfoDto>> getAvailableSubjectsToEnroll() {
         return ResponseEntity.ok(subjectService.getAvailableSubjectsToEnroll());
     }
 }

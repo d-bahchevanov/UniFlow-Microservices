@@ -4,6 +4,7 @@ import com.uniflow.academicservice.dto.DomainNameDto;
 import com.uniflow.academicservice.dto.SubjectCreateDto;
 import com.uniflow.academicservice.dto.SubjectResponseDto;
 import com.uniflow.academicservice.dto.client.StudentAcademicInfoDto;
+import com.uniflow.academicservice.dto.client.SubjectInfoDto;
 import com.uniflow.academicservice.exception.domain.specialization.SpecializationFacultyMismatchException;
 import com.uniflow.academicservice.exception.domain.specialization.SpecializationNotFoundException;
 import com.uniflow.academicservice.exception.domain.subject.SubjectExistsException;
@@ -88,9 +89,9 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public List<DomainNameDto> getAvailableSubjectsToEnroll() {
+    public List<SubjectInfoDto> getAvailableSubjectsToEnroll() {
         StudentAcademicInfoDto info = profileClient.getStudentAcademicInfo();
-        List<DomainNameDto> subjects = subjectRepository.getSubjectBySpecialization_IdAndYear(info.getSpecializationId(), info.getYearOfStudy());
-        return subjects.stream().toList();
+        List<Subject> subjects = subjectRepository.getSubjectBySpecialization_IdAndYear(info.getSpecializationId(), info.getYearOfStudy());
+        return subjects.stream().map(subject -> new SubjectInfoDto(subject.getName(), subject.getId())).toList();
     }
 }

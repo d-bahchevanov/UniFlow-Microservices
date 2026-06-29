@@ -1,9 +1,11 @@
 package com.uniflow.enrollservice.service.impl;
 
 import com.uniflow.enrollservice.client.AcademyClient;
-import com.uniflow.enrollservice.dto.DomainNameDto;
+import com.uniflow.enrollservice.client.ProfileClient;
+import com.uniflow.enrollservice.dto.client.SubjectInfoDto;
 import com.uniflow.enrollservice.dto.EnrollmentRequestDto;
 import com.uniflow.enrollservice.dto.EnrollmentResponseDto;
+import com.uniflow.enrollservice.dto.client.StudentProfileResponseDto;
 import com.uniflow.enrollservice.enums.EnrollmentStatus;
 import com.uniflow.enrollservice.exception.domain.EnrollmentAlreadyExistsException;
 import com.uniflow.enrollservice.exception.domain.EnrollmentNotFoundException;
@@ -25,31 +27,31 @@ import static com.uniflow.enrollservice.enums.EnrollmentStatus.*;
 public class EnrollmentServiceImpl implements EnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
     private final AcademyClient academyClient;
+    private final ProfileClient profileClient;
     @Override
     public EnrollmentResponseDto enrollStudent(EnrollmentRequestDto enrollmentRequestDto) {
         if (enrollmentRepository.existsByStudentIdAndSubjectNameAndYear(enrollmentRequestDto.getStudentId(), enrollmentRequestDto.getSubjectName(), enrollmentRequestDto.getYear())) {
             throw new EnrollmentAlreadyExistsException("This enrollment for this student already exists");
         }
-        List<DomainNameDto> availableSubjects = getAvailableSubjectsToEnroll();
-        //List<String> availableSubjects = getAvailableSubjectsToEnroll().stream().map(DomainNameDto::getName).toList();
-        if (availableSubjects.contains(enrollmentRequestDto.getSubjectName())) {
-            Enrollment enrollment = new Enrollment(enrollmentRequestDto.getStudentId(),
-                    enrollmentRequestDto.getFacultyName(),
-                    enrollmentRequestDto.getSpecializationName(),
-                    enrollmentRequestDto.getSubjectName(),
-                    enrollmentRequestDto.getYear(),
+        SubjectInfoDto subject = getAvailableSubjectsToEnroll().stream()
+                .filter(s -> s.getName().equals(enrollmentRequestDto.getSubjectName()))
+                .findFirst()
+                .orElseThrow(() -> new InvalidEnrollmentStateException("Subject is not available for enrollment"));
+            StudentProfileResponseDto studentProfileResponseDto = profileClient.getStudentProfileInfo();
+            Enrollment enrollment = new Enrollment(studentProfileResponseDto.getStudentId(),
+                    studentProfileResponseDto.getFacultyId(),
+                    studentProfileResponseDto.getSpecializationId(),
+                    subject.getId(),
+                    studentProfileResponseDto.getYear(),
                     PENDING);
             enrollmentRepository.save(enrollment);
-            return new EnrollmentResponseDto(enrollmentRequestDto.getStudentId(),
-                    enrollmentRequestDto.getFacultyName(),
-                    enrollmentRequestDto.getSpecializationName(),
-                    enrollmentRequestDto.getSubjectName(),
-                    enrollmentRequestDto.getYear(),
+            return new EnrollmentResponseDto(studentProfileResponseDto.getStudentId(),
+                    enrollmentRequestDto.getFacultyName(), //need new dto for response based on academy client
+                    enrollmentRequestDto.getSpecializationName(), //need new dto for response based on academy client
+                    subject.getName(),
+                    studentProfileResponseDto.getYear(),
                     PENDING);
-        } else {
-            throw new InvalidEnrollmentStateException("Subject is not available for enrollment");
         }
-    }
 
     @Override
     @Transactional
@@ -143,8 +145,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
-    public List<DomainNameDto> getAvailableSubjectsToEnroll() {
-        List<DomainNameDto> subjects = academyClient.getAvailableSubjects();
+    public List<SubjectInfoDto> getAvailableSubjectsToEnroll() {
+        List<SubjectInfoDto> subjects = academyClient.getAvailableSubjects();
         return subjects.stream().toList();
     }
 }

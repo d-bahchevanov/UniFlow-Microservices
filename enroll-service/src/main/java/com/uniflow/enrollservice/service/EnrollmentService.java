@@ -1,10 +1,8 @@
 package com.uniflow.enrollservice.service;
 
-import com.uniflow.enrollservice.dto.DomainNameDto;
+import com.uniflow.enrollservice.dto.client.SubjectInfoDto;
 import com.uniflow.enrollservice.dto.EnrollmentRequestDto;
 import com.uniflow.enrollservice.dto.EnrollmentResponseDto;
-import com.uniflow.enrollservice.model.Enrollment;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -30,5 +28,5 @@ public interface EnrollmentService {
     List<EnrollmentResponseDto> getEnrollmentsByStudent(Long studentId);
 
     List<EnrollmentResponseDto> getEnrollmentsBySubject(String subjectName);
-    List<DomainNameDto> getAvailableSubjectsToEnroll();
+    List<SubjectInfoDto> getAvailableSubjectsToEnroll();
 }

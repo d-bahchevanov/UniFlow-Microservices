@@ -1,10 +1,9 @@
 package com.uniflow.enrollservice.controller;
 
-import com.uniflow.enrollservice.dto.DomainNameDto;
+import com.uniflow.enrollservice.dto.client.SubjectInfoDto;
 import com.uniflow.enrollservice.dto.EnrollmentRequestDto;
 import com.uniflow.enrollservice.dto.EnrollmentResponseDto;
 import com.uniflow.enrollservice.service.EnrollmentService;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -67,7 +66,7 @@ public class EnrollmentController {
         return ResponseEntity.ok().build();
     }
     @GetMapping("/subjects/available")
-    public ResponseEntity<List<DomainNameDto>> getAvailableSubjects() {
+    public ResponseEntity<List<SubjectInfoDto>> getAvailableSubjects() {
         return ResponseEntity.ok(enrollmentService.getAvailableSubjectsToEnroll());
     }
 }
