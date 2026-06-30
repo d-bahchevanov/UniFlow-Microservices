@@ -27,8 +27,12 @@ public class SpecializationController {
     }
     @GetMapping("/admin/get/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<SpecializationResponseDto> getSpecializationById(@PathVariable Long id) {
+    public ResponseEntity<SpecializationResponseDto> getSpecializationById(@PathVariable long id) {
         return ResponseEntity.ok(specializationService.getSpecializationById(id));
+    }
+    @GetMapping("/get/{id}")
+    public ResponseEntity<String> getSpecializationNameByIdInternal(@PathVariable long id) {
+        return ResponseEntity.ok(specializationService.getSpecializationNameById(id));
     }
     @GetMapping("/get/{specializationName}")
     public ResponseEntity<SpecializationResponseDto> getSpecializationByName(@PathVariable String specializationName) {

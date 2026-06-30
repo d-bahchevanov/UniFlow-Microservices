@@ -11,7 +11,8 @@ public interface SpecializationService {
     boolean specializationExistsByName(String name);
     void validateSpecializationBelongsToFaculty(String specializationName, String facultyName);
     void deleteSpecialization(String name);
-    SpecializationResponseDto getSpecializationById(Long id);
+    SpecializationResponseDto getSpecializationById(long id);
     void validateFacultySpecialization(FacultySpecializationValidationRequest request);
+    String getSpecializationNameById(long id);
 }
 

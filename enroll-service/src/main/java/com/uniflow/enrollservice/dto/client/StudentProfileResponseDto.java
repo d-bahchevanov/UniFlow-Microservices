@@ -7,8 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class StudentProfileResponseDto {
     private Long studentId;
-    private Long facultyId;
-    private Long specializationId;
+    private long facultyId;
+    private long specializationId;
     private String subjectName;
-    private int year;
+    private int yearOfStudy;
 }

@@ -100,6 +100,7 @@ public class ProfileServiceImpl implements ProfileService {
         }
         return foundProfiles.stream()
                 .map(p -> new StudentProfileResponseDto(
+                        p.getUserId(),
                         p.getUsername(),
                         p.getFirstName(),
                         p.getLastName(),
@@ -137,7 +138,7 @@ public class ProfileServiceImpl implements ProfileService {
     public ProfileResponseDto viewProfileByUsername(String username) {
         Profile profile = profileRepository.findProfileByUsername(username).orElseThrow(() -> new ProfileNotFoundException("No profile with this username"));
         if (profile.getRole() == Role.STUDENT) {
-            return new StudentProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFacultyId(), profile.getSpecializationId(), profile.getYearOfStudy(), profile.getRole(), profile.getAcademicTitle());
+            return new StudentProfileResponseDto(profile.getUserId(), profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFacultyId(), profile.getSpecializationId(), profile.getYearOfStudy(), profile.getRole(), profile.getAcademicTitle());
         }
         return new ProfessorProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFacultyId(), profile.getAcademicTitle(), profile.getRole());
     }
@@ -151,7 +152,7 @@ public class ProfileServiceImpl implements ProfileService {
         Profile profile = profileRepository.findProfileByUsername(username)
                 .orElseThrow(() -> new ProfileNotFoundException("Profile not found"));
         if (profile.getRole() == Role.STUDENT) {
-            return new StudentProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFacultyId(), profile.getSpecializationId(), profile.getYearOfStudy(), profile.getRole(), profile.getAcademicTitle());
+            return new StudentProfileResponseDto(profile.getUserId(), profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFacultyId(), profile.getSpecializationId(), profile.getYearOfStudy(), profile.getRole(), profile.getAcademicTitle());
         }
         else if (profile.getRole() == Role.PROFESSOR) {
             return new ProfessorProfileResponseDto(profile.getUsername(), profile.getFirstName(), profile.getLastName(), profile.getFacultyId(), profile.getAcademicTitle(), profile.getRole());

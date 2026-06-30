@@ -30,8 +30,12 @@ public class FacultyController {
     }
     @GetMapping("/admin/get/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<FacultyResponseDto> getFacultyById(@PathVariable Long id) {
+    public ResponseEntity<FacultyResponseDto> getFacultyById(@PathVariable long id) {
         return ResponseEntity.ok(facultyService.getFacultyById(id));
+    }
+    @GetMapping("/get/{id}")
+    public ResponseEntity<String> getFacultyNameByIdInternal(@PathVariable long id) {
+        return ResponseEntity.ok(facultyService.getFacultyNameById(id));
     }
     @DeleteMapping("/delete/{name}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -41,7 +45,7 @@ public class FacultyController {
     }
     @GetMapping("/exists/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> validateFaculty(@PathVariable Long id) {
+    public ResponseEntity<Void> validateFaculty(@PathVariable long id) {
         facultyService.validateFaculty(id);
         return ResponseEntity.ok().build();
     }

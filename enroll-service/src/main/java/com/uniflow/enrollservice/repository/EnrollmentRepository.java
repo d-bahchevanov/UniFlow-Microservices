@@ -9,13 +9,13 @@ import java.util.Optional;
 
 @Repository
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
-    boolean existsByStudentIdAndSubjectNameAndYear(
+    boolean existsByStudentIdAndSubjectIdAndYear(
             Long studentId,
-            String subjectName,
+            long subjectId,
             int year
     );
 
     List<Enrollment> findAllByStudentId(Long studentId);
 
-    List<Enrollment> findAllBySubjectName(String subjectName);
+    List<Enrollment> findAllBySubjectId(long subjectId);
 }

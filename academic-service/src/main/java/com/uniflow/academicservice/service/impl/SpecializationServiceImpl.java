@@ -115,7 +115,7 @@ public class SpecializationServiceImpl implements SpecializationService {
     }
 
     @Override
-    public SpecializationResponseDto getSpecializationById(Long id) {
+    public SpecializationResponseDto getSpecializationById(long id) {
         if (!specializationRepository.existsById(id)) {
             throw new SpecializationNotFoundException("No such specialization exists");
         }
@@ -136,5 +136,11 @@ public class SpecializationServiceImpl implements SpecializationService {
         if (!exists) {
             throw new SpecializationFacultyMismatchException("No specialization in this faculty");
         }
+    }
+
+    @Override
+    public String getSpecializationNameById(long id) {
+        SpecializationResponseDto specializationResponseDto = getSpecializationById(id);
+        return specializationResponseDto.getName();
     }
 }

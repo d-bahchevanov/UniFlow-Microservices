@@ -63,7 +63,7 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public FacultyResponseDto getFacultyById(Long id) {
+    public FacultyResponseDto getFacultyById(long id) {
         Faculty faculty = facultyRepository.getFacultyById(id).orElseThrow(() -> new FacultyNotFoundException("No such faculty exists"));
         List<DomainNameDto> specializationList = specializationRepository.findSpecializationsByFaculty_Name(faculty.getName())
                 .stream()
@@ -72,9 +72,15 @@ public class FacultyServiceImpl implements FacultyService {
         return new FacultyResponseDto(faculty.getName(), specializationList);
     }
     @Override
-    public void validateFaculty(Long id) {
+    public void validateFaculty(long id) {
         facultyRepository.findById(id)
                 .orElseThrow(() ->
                         new FacultyNotFoundException("Faculty with this id does not exist"));
+    }
+
+    @Override
+    public String getFacultyNameById(long id) {
+        FacultyResponseDto facultyResponseDto = getFacultyById(id);
+        return facultyResponseDto.getName();
     }
 }

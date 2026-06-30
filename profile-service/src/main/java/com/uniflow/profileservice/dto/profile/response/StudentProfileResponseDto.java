@@ -9,11 +9,12 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class StudentProfileResponseDto implements ProfileResponseDto {
+    private Long studentId;
     private String username;
     private String firstName;
     private String lastName;
-    private Long facultyId;
-    private Long specializationId;
+    private long facultyId;
+    private long specializationId;
     private int yearOfStudy;
     private Role role;
     private AcademicTitle academicTitle;
