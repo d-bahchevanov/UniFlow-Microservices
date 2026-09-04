@@ -5,11 +5,15 @@ import com.uniflow.identity.exception.domain.ExistingEmailException;
 import com.uniflow.identity.exception.domain.ExistingUsernameException;
 import com.uniflow.identity.exception.domain.UserNotFoundException;
 import com.uniflow.identity.exception.domain.WrongPasswordException;
+import com.uniflow.identity.kafka.event.UserRegisteredEvent;
+import com.uniflow.identity.kafka.producer.UserRegisteredEventProducer;
 import com.uniflow.identity.model.User;
 import com.uniflow.identity.repository.UserRepository;
 import com.uniflow.identity.security.jwt.service.JwtService;
 import com.uniflow.identity.services.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +30,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final ProfileClient profileClient;
+    private final UserRegisteredEventProducer eventProducer;
     @Override
     @Transactional
     public ResponseUserDto createUser(CreateRequestUserDto dto) {
@@ -38,17 +43,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     passwordEncoder.encode(dto.getPassword()), dto.getAge(), dto.getPhoneNumber(), dto.getRole());
         userRepository.save(user);
 
-        profileClient.createProfile(
-                new CreateProfileRequest(
-                        user.getId(),
-                        user.getFirstName(),
-                        user.getLastName(),
-                        user.getUsername(),
-                        user.getEmail(),
-                        user.getPassword(),
-                        user.getRole()
-                )
+        UserRegisteredEvent event = new UserRegisteredEvent(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole()
         );
+        eventProducer.sendUserRegisteredEvent(event);
         return new ResponseUserDto(user.getEmail(), user.getUsername());
     }
 

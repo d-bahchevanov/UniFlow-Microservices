@@ -14,6 +14,8 @@ import com.uniflow.profileservice.dto.profile.response.ProfessorProfileResponseD
 import com.uniflow.profileservice.enums.Role;
 import com.uniflow.profileservice.exception.domain.ProfileAlreadyExistException;
 import com.uniflow.profileservice.exception.domain.ProfileNotFoundException;
+import com.uniflow.profileservice.kafka.consumer.UserRegisteredEventConsumer;
+import com.uniflow.profileservice.kafka.event.UserRegisteredEvent;
 import com.uniflow.profileservice.model.Profile;
 import com.uniflow.profileservice.repository.ProfileRepository;
 import com.uniflow.profileservice.security.jwt.JwtService;
@@ -22,6 +24,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -39,21 +42,19 @@ public class ProfileServiceImpl implements ProfileService {
     private final AcademyClient academyClient;
     @Override
     @Transactional
-    public void createProfile(CreateProfileRequest request) {
-        profileRepository.findByUserId(request.userId())
+    public void createProfile(UserRegisteredEvent event) {
+        profileRepository.findByUserId(event.userId())
                 .ifPresent(profile -> {
                     throw new ProfileAlreadyExistException("Profile already exists for user");
                 });
-        Profile profile = Profile.builder()
-                .userId(request.userId())
-                .firstName(request.firstName())
-                .lastName(request.lastName())
-                .username(request.username())
-                .email(request.email())
-                .password(request.password())
-                .role(request.role())
-                .build();
-
+        Profile profile = new Profile(
+                event.userId(),
+                event.firstName(),
+                event.lastName(),
+                event.username(),
+                event.email(),
+                event.role()
+        );
         profileRepository.save(profile);
     }
 

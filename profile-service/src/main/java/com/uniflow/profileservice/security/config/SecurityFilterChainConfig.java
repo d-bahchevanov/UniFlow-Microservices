@@ -16,7 +16,7 @@ public class SecurityFilterChainConfig {
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(auth -> auth.requestMatchers("/api/profiles/create","/api/profiles/delete/**",
+        httpSecurity.authorizeHttpRequests(auth -> auth.requestMatchers("/api/profiles/delete/**",
                         "/api/profiles/profile/update/**", "/api/profiles/profile/{username}").hasRole("ADMIN").anyRequest().authenticated()).csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

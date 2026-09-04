@@ -23,12 +23,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ProfileController {
     private final ProfileService profileService;
-    @PostMapping("/create")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> createProfile(@RequestBody CreateProfileRequest request) {
-        profileService.createProfile(request);
-        return ResponseEntity.ok().build();
-    }
     @GetMapping("/me")
     public ResponseEntity<ProfileResponseDto> viewProfile(){
         return ResponseEntity.ok(profileService.viewProfile());

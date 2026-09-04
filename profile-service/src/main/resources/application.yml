@@ -6,7 +6,19 @@ spring:
     username: profile_user
     password: profile_pass
     driver-class-name: org.postgresql.Driver
-
+  kafka:
+    bootstrap-servers: localhost:9092
+    topics:
+      user-created: user-created
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: profile-group
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: com.uniflow.*
+        spring.json.value.default.type: "com.uniflow.profileservice.kafka.event.UserRegisteredEvent"
+        spring.json.use.type.headers: false
   jpa:
     hibernate:
       ddl-auto: update
@@ -20,3 +32,4 @@ security:
   jwt:
     secret-key: 8pFcrOSF8T9yq2ccOwkmecKcStATsrMftKCFVzdCqXeD5biqlt
     issuer: uniflow-identity-service
+

@@ -10,6 +10,7 @@ import com.uniflow.profileservice.dto.profile.response.ProfessorProfileResponseD
 import com.uniflow.profileservice.dto.update.response.UpdateOwnProfileResponseDto;
 import com.uniflow.profileservice.dto.profile.intr.ProfileResponseDto;
 import com.uniflow.profileservice.dto.profile.request.ProfileRequestDto;
+import com.uniflow.profileservice.kafka.event.UserRegisteredEvent;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public interface ProfileService extends UserDetailsService {
     ProfileResponseDto viewProfile();
     UpdateOwnProfileResponseDto updateOwnProfile(ProfileRequestDto profileRequestDto);
     AdminUpdateResponseDto updateProfileByAdmin(String username, AdminUpdateRequestDto adminUpdateRequestDto);
-    void createProfile(CreateProfileRequest request);
+    void createProfile(UserRegisteredEvent event);
     void deleteProfile(Long id);
     StudentAcademicInfoDto getStudentAcademicInfo();
 }
