@@ -134,7 +134,7 @@ public class SpecializationServiceImpl implements SpecializationService {
     public void validateFacultySpecialization(FacultySpecializationValidationRequest request) {
         boolean exists = specializationRepository.existsSpecializationByIdAndFaculty_Id(request.getSpecializationId(), request.getFacultyId());
         if (!exists) {
-            throw new SpecializationFacultyMismatchException("No specialization in this faculty");
+            throw new SpecializationFacultyMismatchException("This specialization is not in this faculty");
         }
     }
 
@@ -142,5 +142,11 @@ public class SpecializationServiceImpl implements SpecializationService {
     public String getSpecializationNameById(long id) {
         SpecializationResponseDto specializationResponseDto = getSpecializationById(id);
         return specializationResponseDto.getName();
+    }
+
+    @Override
+    public Long getSpecializationIdByName(String name) {
+        Specialization specialization = specializationRepository.findByName(name).orElseThrow(() -> new SpecializationNotFoundException("No specialization with such name"));
+        return specialization.getId();
     }
 }

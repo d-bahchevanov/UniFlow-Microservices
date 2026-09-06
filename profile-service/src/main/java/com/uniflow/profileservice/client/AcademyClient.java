@@ -16,4 +16,8 @@ public interface AcademyClient {
     void validateFaculty(@PathVariable Long id);
     @PostMapping("/specialization/validate/faculty-specialization")
     void validateFacultySpecialization(@RequestBody FacultySpecializationValidationRequest request);
+    @GetMapping("/specialization/internal/get/{name}")
+    Long getSpecializationIdByNameInternal(@PathVariable String name);
+    @GetMapping("/faculty/internal/get/{name}")
+    Long getFacultyIdByNameInternal(@PathVariable String name);
 }

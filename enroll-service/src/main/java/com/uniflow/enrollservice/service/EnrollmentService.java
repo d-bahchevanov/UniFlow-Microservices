@@ -1,6 +1,5 @@
 package com.uniflow.enrollservice.service;
 
-import com.uniflow.enrollservice.dto.admin.AdminEnrollmentResponseDto;
 import com.uniflow.enrollservice.dto.client.SubjectInfoDto;
 import com.uniflow.enrollservice.dto.EnrollmentRequestDto;
 import com.uniflow.enrollservice.dto.EnrollmentResponseDto;

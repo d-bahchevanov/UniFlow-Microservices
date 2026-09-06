@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 import static org.springframework.security.core.userdetails.User.builder;
 
@@ -188,6 +189,7 @@ public UpdateOwnProfileResponseDto updateOwnProfile(ProfileRequestDto profileReq
 @Override
 public AdminUpdateResponseDto updateProfileByAdmin(String username, AdminUpdateRequestDto adminUpdateRequestDto) {
     Profile profile = profileRepository.findProfileByUsername(username).orElseThrow(() -> new ProfileNotFoundException("This profile does not exist"));
+    /*
     Long effectiveFacultyId =
             adminUpdateRequestDto.getFacultyId() != null
                     ? adminUpdateRequestDto.getFacultyId()
@@ -201,7 +203,18 @@ public AdminUpdateResponseDto updateProfileByAdmin(String username, AdminUpdateR
         academyClient.validateFacultySpecialization(validationRequest);
         profile.setSpecializationId(adminUpdateRequestDto.getSpecializationId());
     }
-
+    */
+    Long effectiveFacultyId = academyClient.getFacultyIdByNameInternal(adminUpdateRequestDto.getFacultyName());
+    if (adminUpdateRequestDto.getFacultyName()!= null) {
+        academyClient.validateFaculty(effectiveFacultyId);
+        profile.setFacultyId(effectiveFacultyId);
+    }
+    if (adminUpdateRequestDto.getSpecializationName() != null && profile.getRole() == Role.STUDENT) {
+        Long specializationId = academyClient.getSpecializationIdByNameInternal(adminUpdateRequestDto.getSpecializationName());
+        FacultySpecializationValidationRequest validationRequest = new FacultySpecializationValidationRequest(effectiveFacultyId, specializationId);
+        academyClient.validateFacultySpecialization(validationRequest);
+        profile.setSpecializationId(specializationId);
+    }
     if (adminUpdateRequestDto.getYearOfStudy() != null && profile.getRole() == Role.STUDENT) {
         profile.setYearOfStudy(adminUpdateRequestDto.getYearOfStudy());
     }

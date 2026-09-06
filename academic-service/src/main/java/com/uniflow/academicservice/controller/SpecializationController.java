@@ -59,4 +59,9 @@ public class SpecializationController {
         specializationService.validateFacultySpecialization(request);
         return ResponseEntity.ok().build();
     }
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/internal/get/{name}")
+    public ResponseEntity<Long> getSpecializationIdByNameInternal(@PathVariable String name) {
+        return ResponseEntity.ok(specializationService.getSpecializationIdByName(name));
+    }
 }

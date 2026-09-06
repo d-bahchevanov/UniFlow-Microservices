@@ -2,6 +2,7 @@ package com.uniflow.academicservice.service;
 import com.uniflow.academicservice.dto.FacultySpecializationValidationRequest;
 import com.uniflow.academicservice.dto.SpecializationResponseDto;
 import java.util.List;
+import java.util.Optional;
 
 public interface SpecializationService {
     SpecializationResponseDto createSpecialization(String specializationName, String facultyName);
@@ -14,5 +15,6 @@ public interface SpecializationService {
     SpecializationResponseDto getSpecializationById(long id);
     void validateFacultySpecialization(FacultySpecializationValidationRequest request);
     String getSpecializationNameById(long id);
+    Long getSpecializationIdByName(String name);
 }
 

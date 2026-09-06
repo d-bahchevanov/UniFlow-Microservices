@@ -83,4 +83,10 @@ public class FacultyServiceImpl implements FacultyService {
         FacultyResponseDto facultyResponseDto = getFacultyById(id);
         return facultyResponseDto.getName();
     }
+
+    @Override
+    public Long getFacultyIdByName(String name) {
+        Faculty faculty = facultyRepository.getFacultyByName(name).orElseThrow(() -> new FacultyNotFoundException("No faculty with such name"));
+        return faculty.getId();
+    }
 }

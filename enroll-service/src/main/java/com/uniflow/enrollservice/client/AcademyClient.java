@@ -9,6 +9,7 @@ import java.util.List;
 
 @FeignClient(
         name = "ACADEMIC",
+        contextId = "academicClient",
         configuration = FeignConfig.class
 )
 public interface AcademyClient {

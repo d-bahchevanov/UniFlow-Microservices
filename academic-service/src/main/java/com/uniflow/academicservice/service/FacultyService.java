@@ -4,6 +4,7 @@ import com.uniflow.academicservice.dto.FacultyResponseDto;
 import com.uniflow.academicservice.model.Faculty;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FacultyService {
 
@@ -14,5 +15,6 @@ public interface FacultyService {
     FacultyResponseDto getFacultyById(long id);
     void validateFaculty(long id);
     String getFacultyNameById(long id);
+    Long getFacultyIdByName(String name);
 }
 

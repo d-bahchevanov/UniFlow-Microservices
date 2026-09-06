@@ -49,4 +49,9 @@ public class FacultyController {
         facultyService.validateFaculty(id);
         return ResponseEntity.ok().build();
     }
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/internal/get/{name}")
+    public ResponseEntity<Long> getFacultyIdByNameInternal(@PathVariable String name) {
+        return ResponseEntity.ok(facultyService.getFacultyIdByName(name));
+    }
 }
