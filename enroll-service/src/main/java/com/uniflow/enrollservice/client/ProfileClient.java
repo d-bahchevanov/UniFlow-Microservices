@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 @FeignClient(
-        name = "ACADEMIC",
-        contextId = "academicProfileClient",
+        name = "PROFILE",
+        contextId = "enrollProfileClient",
         configuration = FeignConfig.class
 )
 public interface ProfileClient {

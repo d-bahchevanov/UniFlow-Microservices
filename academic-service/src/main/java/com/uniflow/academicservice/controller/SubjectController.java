@@ -53,4 +53,12 @@ public class SubjectController {
     public ResponseEntity<List<SubjectInfoDto>> getAvailableSubjectsToEnroll() {
         return ResponseEntity.ok(subjectService.getAvailableSubjectsToEnroll());
     }
+    @GetMapping("/internal/get/id/{id}")
+    public ResponseEntity<String> getSubjectNameByIdInternal(@PathVariable long id) {
+        return ResponseEntity.ok(subjectService.getSubjectNameById(id));
+    }
+    @GetMapping("/internal/get/name/{name}")
+    public ResponseEntity<Long> getSubjectIdByNameInternal(@PathVariable String name) {
+        return ResponseEntity.ok(subjectService.getSubjectIdByName(name));
+    }
 }

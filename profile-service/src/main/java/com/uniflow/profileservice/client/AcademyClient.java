@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
         name = "ACADEMIC",
+        contextId = "academicClientForProfile",
         configuration = FeignConfig.class
 )
 public interface AcademyClient {
@@ -16,8 +17,8 @@ public interface AcademyClient {
     void validateFaculty(@PathVariable Long id);
     @PostMapping("/specialization/validate/faculty-specialization")
     void validateFacultySpecialization(@RequestBody FacultySpecializationValidationRequest request);
-    @GetMapping("/specialization/internal/get/{name}")
+    @GetMapping("/specialization/internal/get/name/{name}")
     Long getSpecializationIdByNameInternal(@PathVariable String name);
-    @GetMapping("/faculty/internal/get/{name}")
+    @GetMapping("/faculty/internal/get/name/{name}")
     Long getFacultyIdByNameInternal(@PathVariable String name);
 }

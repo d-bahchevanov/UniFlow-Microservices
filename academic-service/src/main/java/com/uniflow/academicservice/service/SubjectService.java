@@ -18,5 +18,7 @@ public interface SubjectService {
     boolean subjectExistsByName(String name);
     void deleteSubject(String name);
     List<SubjectInfoDto> getAvailableSubjectsToEnroll();
+    String getSubjectNameById(long id);
+    Long getSubjectIdByName(String name);
 }
 

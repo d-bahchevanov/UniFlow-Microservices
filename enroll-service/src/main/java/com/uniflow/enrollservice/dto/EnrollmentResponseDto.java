@@ -11,6 +11,6 @@ public class EnrollmentResponseDto {
     private String facultyName;
     private String specializationName;
     private String subjectName;
-    private int semester;
+    private int year;
     private EnrollmentStatus status;
 }

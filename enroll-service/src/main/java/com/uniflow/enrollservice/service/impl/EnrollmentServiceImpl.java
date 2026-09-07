@@ -2,6 +2,7 @@ package com.uniflow.enrollservice.service.impl;
 
 import com.uniflow.enrollservice.client.AcademyClient;
 import com.uniflow.enrollservice.client.ProfileClient;
+import com.uniflow.enrollservice.dto.client.SpecializationResponseDto;
 import com.uniflow.enrollservice.dto.client.SubjectInfoDto;
 import com.uniflow.enrollservice.dto.EnrollmentRequestDto;
 import com.uniflow.enrollservice.dto.EnrollmentResponseDto;
@@ -34,26 +35,30 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .filter(s -> s.getName().equals(enrollmentRequestDto.getSubjectName()))
                 .findFirst()
                 .orElseThrow(() -> new InvalidEnrollmentStateException("Subject is not available for enrollment"));
-            StudentProfileResponseDto studentProfileResponseDto = profileClient.getStudentProfileInfo();
-        if (enrollmentRepository.existsByStudentIdAndSubjectIdAndYear(enrollmentRequestDto.getStudentId(), subject.getId(), enrollmentRequestDto.getYear())) {
+        StudentProfileResponseDto studentProfileResponseDto = profileClient.getStudentProfileInfo();
+        String subjectName = subject.getName();
+        long subjectId = academyClient.getSubjectIdByNameInternal(subjectName);
+        Long studentId = studentProfileResponseDto.getStudentId();
+        int yearOfStudy = studentProfileResponseDto.getYearOfStudy();
+        if (enrollmentRepository.existsByStudentIdAndSubjectIdAndYear(studentId, subjectId, yearOfStudy)) {
             throw new EnrollmentAlreadyExistsException("This enrollment for this student already exists");
         }
             long facultyId = studentProfileResponseDto.getFacultyId();
             long specializationId = studentProfileResponseDto.getSpecializationId();
-            Enrollment enrollment = new Enrollment(studentProfileResponseDto.getStudentId(),
+            Enrollment enrollment = new Enrollment(studentId,
                     facultyId,
                     specializationId,
-                    subject.getId(),
-                    studentProfileResponseDto.getYearOfStudy(),
+                    subjectId,
+                    yearOfStudy,
                     PENDING);
             enrollmentRepository.save(enrollment);
             String facultyName = academyClient.getFacultyNameByIdInternal(facultyId);
             String specializationName = academyClient.getSpecializationNameByIdInternal(specializationId);
-            return new EnrollmentResponseDto(studentProfileResponseDto.getStudentId(),
+            return new EnrollmentResponseDto(studentId,
                     facultyName,
                     specializationName,
-                    subject.getName(),
-                    studentProfileResponseDto.getYearOfStudy(),
+                    subjectName,
+                    yearOfStudy,
                     PENDING);
         }
 
@@ -123,10 +128,10 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     public List<EnrollmentResponseDto> getEnrollmentsByStudent(Long studentId) {
         return enrollmentRepository.findAllByStudentId(studentId).stream().map(e -> new EnrollmentResponseDto(
                 e.getStudentId(),
-                academyClient.getFacultyNameByIdInternal(e.getFacultyId()),
-                academyClient.getSpecializationNameByIdInternal(e.getSpecializationId()),
-                academyClient.getSubjectInfoByIdInternal(e.getSubjectId()).getName(),
-                e.getPoints(),
+                        academyClient.getFacultyNameByIdInternal(e.getFacultyId()),
+                        academyClient.getSpecializationNameByIdInternal(e.getSpecializationId()),
+                        academyClient.getSubjectNameByIdInternal(e.getSubjectId()),
+                        e.getYear(),
                 e.getStatus()
                 )).filter(enrollmentResponseDto -> enrollmentResponseDto.getStatus() != PENDING &&
                         enrollmentResponseDto.getStatus() != REJECTED)
@@ -135,12 +140,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     public List<EnrollmentResponseDto> getEnrollmentsBySubject(String subjectName) {
-        SubjectInfoDto subjectInfoDto = academyClient.getSubjectByName(subjectName);
-        return enrollmentRepository.findAllBySubjectId(subjectInfoDto.getId()).stream().map(e -> new EnrollmentResponseDto(
+        long subjectId = academyClient.getSubjectIdByNameInternal(subjectName);
+        return enrollmentRepository.findAllBySubjectId(subjectId).stream().map(e -> new EnrollmentResponseDto(
                         e.getStudentId(),
                         academyClient.getFacultyNameByIdInternal(e.getFacultyId()),
                         academyClient.getSpecializationNameByIdInternal(e.getSpecializationId()),
-                        academyClient.getSubjectInfoByIdInternal(e.getSubjectId()).getName(),
+                        academyClient.getSubjectNameByIdInternal(e.getSubjectId()),
                         e.getPoints(),
                         e.getStatus()
                 ))

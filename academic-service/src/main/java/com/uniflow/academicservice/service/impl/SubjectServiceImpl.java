@@ -94,4 +94,16 @@ public class SubjectServiceImpl implements SubjectService {
         List<Subject> subjects = subjectRepository.getSubjectBySpecialization_IdAndYear(info.getSpecializationId(), info.getYearOfStudy());
         return subjects.stream().map(subject -> new SubjectInfoDto(subject.getName(), subject.getId())).toList();
     }
+
+    @Override
+    public String getSubjectNameById(long id) {
+        Subject subject = subjectRepository.findById(id).orElseThrow(() -> new SubjectNotFoundException("No such subject"));
+        return subject.getName();
+    }
+
+    @Override
+    public Long getSubjectIdByName(String name) {
+        Subject subject = subjectRepository.findByName(name).orElseThrow(() -> new SubjectNotFoundException("No such subject"));
+        return subject.getId();
+    }
 }

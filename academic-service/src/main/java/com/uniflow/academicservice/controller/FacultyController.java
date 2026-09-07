@@ -33,7 +33,7 @@ public class FacultyController {
     public ResponseEntity<FacultyResponseDto> getFacultyById(@PathVariable long id) {
         return ResponseEntity.ok(facultyService.getFacultyById(id));
     }
-    @GetMapping("/get/{id}")
+    @GetMapping("/internal/get/id/{id}")
     public ResponseEntity<String> getFacultyNameByIdInternal(@PathVariable long id) {
         return ResponseEntity.ok(facultyService.getFacultyNameById(id));
     }
@@ -50,7 +50,7 @@ public class FacultyController {
         return ResponseEntity.ok().build();
     }
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/internal/get/{name}")
+    @GetMapping("/internal/get/name/{name}")
     public ResponseEntity<Long> getFacultyIdByNameInternal(@PathVariable String name) {
         return ResponseEntity.ok(facultyService.getFacultyIdByName(name));
     }
