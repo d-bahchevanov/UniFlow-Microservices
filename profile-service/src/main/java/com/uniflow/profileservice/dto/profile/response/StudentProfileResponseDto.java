@@ -13,8 +13,8 @@ public class StudentProfileResponseDto implements ProfileResponseDto {
     private String username;
     private String firstName;
     private String lastName;
-    private long facultyId;
-    private long specializationId;
+    private String facultyName;
+    private String specializationName;
     private int yearOfStudy;
     private Role role;
     private AcademicTitle academicTitle;

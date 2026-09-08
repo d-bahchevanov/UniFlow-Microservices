@@ -1,19 +1,17 @@
 package com.uniflow.identity.services.impl;
-import com.uniflow.identity.client.ProfileClient;
 import com.uniflow.identity.dto.*;
 import com.uniflow.identity.exception.domain.ExistingEmailException;
 import com.uniflow.identity.exception.domain.ExistingUsernameException;
 import com.uniflow.identity.exception.domain.UserNotFoundException;
 import com.uniflow.identity.exception.domain.WrongPasswordException;
 import com.uniflow.identity.kafka.event.UserRegisteredEvent;
+import com.uniflow.identity.kafka.producer.UserDeletedEventProducer;
 import com.uniflow.identity.kafka.producer.UserRegisteredEventProducer;
 import com.uniflow.identity.model.User;
 import com.uniflow.identity.repository.UserRepository;
 import com.uniflow.identity.security.jwt.service.JwtService;
 import com.uniflow.identity.services.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.kafka.annotation.EnableKafka;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,8 +27,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final ProfileClient profileClient;
-    private final UserRegisteredEventProducer eventProducer;
+    private final UserRegisteredEventProducer eventRegistrationProducer;
+    private final UserDeletedEventProducer userDeletedEventProducer;
     @Override
     @Transactional
     public ResponseUserDto createUser(CreateRequestUserDto dto) {
@@ -51,7 +49,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 user.getEmail(),
                 user.getRole()
         );
-        eventProducer.sendUserRegisteredEvent(event);
+        eventRegistrationProducer.sendUserRegisteredEvent(event);
         return new ResponseUserDto(user.getEmail(), user.getUsername());
     }
 
@@ -83,8 +81,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (!userRepository.existsById(id)) {
             throw new UserNotFoundException("No such user exists");
         }
-        profileClient.deleteProfile(id);
         userRepository.deleteUserById(id);
+        userDeletedEventProducer.sendUserDeletedEvent(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUserByUsername(String username) {
+        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UserNotFoundException("No user with this username"));
+        userRepository.deleteUserByUsername(username);
+        userDeletedEventProducer.sendUserDeletedEvent(user.getId());
+    }
+
+    @Override
+    public ResponseUserDto getUserByUsername(String username) {
+        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new UserNotFoundException("No user with this username"));
+        return new ResponseUserDto(user.getEmail(), user.getUsername());
     }
 
     @Override

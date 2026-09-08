@@ -21,4 +21,8 @@ public interface AcademyClient {
     Long getSpecializationIdByNameInternal(@PathVariable String name);
     @GetMapping("/faculty/internal/get/name/{name}")
     Long getFacultyIdByNameInternal(@PathVariable String name);
+    @GetMapping("/specialization/internal/get/id/{id}")
+    String getSpecializationNameByIdInternal(@PathVariable Long id);
+    @GetMapping("/faculty/internal/get/id/{id}")
+    String getFacultyNameByIdInternal(@PathVariable Long id);
 }

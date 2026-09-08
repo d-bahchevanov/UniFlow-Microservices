@@ -4,6 +4,7 @@ import com.uniflow.identity.dto.LoginRequestUserDto;
 import com.uniflow.identity.dto.LoginResponseDto;
 import com.uniflow.identity.dto.CreateRequestUserDto;
 import com.uniflow.identity.dto.ResponseUserDto;
+import com.uniflow.identity.enums.Role;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 
@@ -14,4 +15,6 @@ public interface UserService extends UserDetailsService {
     List<ResponseUserDto> getAllUsers();
     LoginResponseDto login(LoginRequestUserDto dto);
     void deleteUser(Long id);
+    void deleteUserByUsername(String username);
+    ResponseUserDto getUserByUsername(String username);
 }

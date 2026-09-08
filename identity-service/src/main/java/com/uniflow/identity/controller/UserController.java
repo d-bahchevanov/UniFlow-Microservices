@@ -24,13 +24,18 @@ public class UserController {
     public ResponseEntity<ResponseUserDto> createUser(@Valid @RequestBody CreateRequestUserDto userDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userDto));
     }
-    @GetMapping("/get/{id}")
     @PreAuthorize(value = "hasRole('ADMIN')")
+    @GetMapping("/get/id/{id}")
     public ResponseEntity<ResponseUserDto> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
-    @GetMapping("/list")
     @PreAuthorize(value = "hasRole('ADMIN')")
+    @GetMapping("/get/username/{username}")
+    public ResponseEntity<ResponseUserDto> getUserByUsername(@PathVariable String username) {
+        return ResponseEntity.ok(userService.getUserByUsername(username));
+    }
+    @PreAuthorize(value = "hasRole('ADMIN')")
+    @GetMapping("/list")
     public ResponseEntity<List<ResponseUserDto>> listUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
@@ -38,10 +43,16 @@ public class UserController {
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestUserDto userDto) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.login(userDto));
     }
-    @DeleteMapping("/delete/{id}")
     @PreAuthorize(value = "hasRole('ADMIN')")
+    @DeleteMapping("/delete/id/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+    @PreAuthorize(value = "hasRole('ADMIN')")
+    @DeleteMapping("/delete/username/{username}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String username) {
+        userService.deleteUserByUsername(username);
         return ResponseEntity.noContent().build();
     }
 }
