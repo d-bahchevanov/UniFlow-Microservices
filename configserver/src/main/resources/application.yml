@@ -2,9 +2,18 @@ spring:
   application:
     name: "configserver"
   profiles:
-    # active: native
     active: git
-
+  cloud:
+    config:
+      server:
+        git:
+          uri: "https://github.com/d-bahchevanov/uniflow-config.git"
+          default-label: main
+          timeout: 5
+          clone-on-start: true
+          force-pull: true
+          username: d-bahchevanov
+          password: ${GITHUB_TOKEN}
 management:
   endpoints:
     web:
@@ -22,3 +31,4 @@ management:
 
 server:
   port: 8071
+

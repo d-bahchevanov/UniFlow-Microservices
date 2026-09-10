@@ -2,47 +2,4 @@ spring:
   application:
     name: "gateway-server"
   config:
-    import: "optional:configserver:http://localhost:8071/"
-  cloud:
-    gateway:
-      server:
-        webflux:
-          discovery:
-            locator:
-              enabled: false
-              lowerCaseServiceId: true
-server:
-  port: 8072
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    gateway:
-      access: unrestricted
-  info:
-    env:
-      enabled: true
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-
-security:
-  jwt:
-    secret-key: 8pFcrOSF8T9yq2ccOwkmecKcStATsrMftKCFVzdCqXeD5biqlt
-    issuer: uniflow-identity-service
-info:
-  app:
-    name: "UniFlow Gateway"
-    description: "UniFlow Gateway Server Application"
-    version: "1.0.0"
-
-logging:
-  level:
-    com:
-      uniflow:
-        gatewayserver: DEBUG
-        org.springframework.cloud.gateway: INFO
-        reactor.netty.http.client: INFO
+    import: "configserver:http://localhost:8071/"

@@ -30,11 +30,11 @@ public class FacultyController {
     }
     @GetMapping("/admin/get/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<FacultyResponseDto> getFacultyById(@PathVariable long id) {
+    public ResponseEntity<FacultyResponseDto> getFacultyById(@PathVariable Long id) {
         return ResponseEntity.ok(facultyService.getFacultyById(id));
     }
     @GetMapping("/internal/get/id/{id}")
-    public ResponseEntity<String> getFacultyNameByIdInternal(@PathVariable long id) {
+    public ResponseEntity<String> getFacultyNameByIdInternal(@PathVariable Long id) {
         return ResponseEntity.ok(facultyService.getFacultyNameById(id));
     }
     @DeleteMapping("/delete/{name}")

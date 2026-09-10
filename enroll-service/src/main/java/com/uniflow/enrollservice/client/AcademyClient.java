@@ -1,6 +1,5 @@
 package com.uniflow.enrollservice.client;
 
-import com.uniflow.enrollservice.dto.client.SpecializationResponseDto;
 import com.uniflow.enrollservice.dto.client.SubjectInfoDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
