@@ -64,6 +64,7 @@ services:
     environment:
       SPRING_APPLICATION_NAME: "identity"
       DB_HOST: "identity_postgres"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://identity_postgres:5432/identity_db"
     extends:
       file: common-config.yml
       service: microservice-kafka-config
@@ -88,7 +89,8 @@ services:
       start_period: 10s
     environment:
       SPRING_APPLICATION_NAME: "profile"
-      DB_HOST: "profile_db"
+      DB_HOST: "profile-db"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://profile-db:5432/profile_db"
     extends:
       file: common-config.yml
       service: microservice-kafka-config
@@ -114,6 +116,7 @@ services:
     environment:
       SPRING_APPLICATION_NAME: "academic"
       DB_HOST: "academy_postgres"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://academy_postgres:5432/academy_db"
     extends:
       file: common-config.yml
       service: microservice-kafka-config
@@ -139,6 +142,7 @@ services:
     environment:
       SPRING_APPLICATION_NAME: "enrollment"
       DB_HOST: "enroll_postgres"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://enroll_postgres:5432/enroll_db"
     extends:
       file: common-config.yml
       service: microservice-kafka-config
