@@ -16,10 +16,17 @@ services:
       service: microservice-base-config
     environment:
       SPRING_PROFILES_ACTIVE: default
-      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
-
+      SPRING_CLOUD_CONFIG_URI: "http://configserver-ms:8071"
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://configserver-ms:8071/"
+      SPRING_CLOUD_CONFIG_ALLOW_OVERRIDE: "true"
+      SPRING_CLOUD_CONFIG_OVERRIDE_SYSTEM_PROPERTIES: "false"
   microservice-eureka-config:
     extends:
       service: microservice-configserver-config
     environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver-ms:8761/eureka/
+  microservice-kafka-config:
+      extends:
+        service: microservice-eureka-config
+      environment:
+        SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"

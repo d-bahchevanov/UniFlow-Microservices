@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Local Environment Variables & Secrets
+.env
+*.env
+docker/.env
+*.env

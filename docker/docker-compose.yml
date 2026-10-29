@@ -1,9 +1,16 @@
 services:
   configserver:
-    image: "eazybytes/configserver:cs"
+    image: "uniflow/configserver:cs"
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     container_name: configserver-ms
     ports:
       - "8071:8071"
+    environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT_LABEL: main
+      SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_ALLOW_OVERRIDE: "true"
     healthcheck:
       test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
       interval: 10s
@@ -13,9 +20,11 @@ services:
     extends:
       file: common-config.yml
       service: microservice-base-config
+    networks:
+      - uniflow
 
   eurekaserver:
-    image: "eazybytes/eurekaserver:es"
+    image: "uniflow/eurekaserver:es"
     container_name: eurekaserver-ms
     ports:
       - "8761:8761"
@@ -33,6 +42,8 @@ services:
       service: microservice-configserver-config
     environment:
       SPRING_APPLICATION_NAME: "eurekaserver"
+    networks:
+      - uniflow
 
   identity-service:
     image: "uniflow/identity-service:ic"
@@ -51,10 +62,13 @@ services:
       retries: 10
       start_period: 10s
     environment:
-        SPRING_APPLICATION_NAME: "identity"
+      SPRING_APPLICATION_NAME: "identity"
+      DB_HOST: "identity_postgres"
     extends:
-        file: common-config.yml
-        service: microservice-eureka-config
+      file: common-config.yml
+      service: microservice-kafka-config
+    networks:
+      - uniflow
 
   profile-service:
     image: "uniflow/profile-service:pc"
@@ -73,10 +87,13 @@ services:
       retries: 10
       start_period: 10s
     environment:
-        SPRING_APPLICATION_NAME: "profile"
+      SPRING_APPLICATION_NAME: "profile"
+      DB_HOST: "profile_db"
     extends:
-        file: common-config.yml
-        service: microservice-eureka-config
+      file: common-config.yml
+      service: microservice-kafka-config
+    networks:
+      - uniflow
 
   academic-service:
     image: "uniflow/academic-service:ac"
@@ -95,10 +112,13 @@ services:
       retries: 10
       start_period: 10s
     environment:
-        SPRING_APPLICATION_NAME: "academy"
+      SPRING_APPLICATION_NAME: "academic"
+      DB_HOST: "academy_postgres"
     extends:
       file: common-config.yml
-      service: microservice-eureka-config
+      service: microservice-kafka-config
+    networks:
+      - uniflow
 
   enroll-service:
     image: "uniflow/enroll-service:ec"
@@ -117,30 +137,40 @@ services:
       retries: 10
       start_period: 10s
     environment:
-        SPRING_APPLICATION_NAME: "enrollment"
+      SPRING_APPLICATION_NAME: "enrollment"
+      DB_HOST: "enroll_postgres"
     extends:
-        file: common-config.yml
-        service: microservice-eureka-config
+      file: common-config.yml
+      service: microservice-kafka-config
+    networks:
+      - uniflow
 
   gatewayserver:
-    image: "eazybytes/gatewayserver:gs"
+    image: "uniflow/gatewayserver:gs"
     container_name: gatewayserver-ms
     ports:
       - "8072:8072"
     depends_on:
-      accounts:
+      configserver:
         condition: service_healthy
-      loans:
+      eurekaserver:
         condition: service_healthy
-      cards:
+      identity-service:
+        condition: service_healthy
+      profile-service:
+        condition: service_healthy
+      academic-service:
+        condition: service_healthy
+      enroll-service:
         condition: service_healthy
     environment:
-      SPRING_APPLICATION_NAME: "gatewayserver"
+      SPRING_APPLICATION_NAME: "gateway-server"
     extends:
       file: common-config.yml
       service: microservice-eureka-config
+    networks:
+      - uniflow
 
 networks:
   uniflow:
     driver: "bridge"
-
