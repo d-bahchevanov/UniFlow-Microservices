@@ -1,11 +1,12 @@
 package com.uniflow.academicservice.service;
 import com.uniflow.academicservice.dto.FacultySpecializationValidationRequest;
+import com.uniflow.academicservice.dto.SpecializationCreateDto;
 import com.uniflow.academicservice.dto.SpecializationResponseDto;
 import java.util.List;
 import java.util.Optional;
 
 public interface SpecializationService {
-    SpecializationResponseDto createSpecialization(String specializationName, String facultyName);
+    SpecializationResponseDto createSpecialization(SpecializationCreateDto specializationCreateDto);
     List<SpecializationResponseDto> getAllSpecializations();
     List<SpecializationResponseDto> getSpecializationsByFaculty(String facultyName);
     SpecializationResponseDto getSpecializationByName(String name);

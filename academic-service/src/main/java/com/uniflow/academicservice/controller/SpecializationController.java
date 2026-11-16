@@ -1,6 +1,7 @@
 package com.uniflow.academicservice.controller;
 
 import com.uniflow.academicservice.dto.FacultySpecializationValidationRequest;
+import com.uniflow.academicservice.dto.SpecializationCreateDto;
 import com.uniflow.academicservice.dto.SpecializationResponseDto;
 import com.uniflow.academicservice.service.SpecializationService;
 import lombok.AllArgsConstructor;
@@ -18,8 +19,8 @@ public class SpecializationController {
     private final SpecializationService specializationService;
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<SpecializationResponseDto> createSpecialization(@RequestParam String specializationName, @RequestParam String facultyName){
-        return ResponseEntity.status(HttpStatus.CREATED).body(specializationService.createSpecialization(specializationName, facultyName));
+    public ResponseEntity<SpecializationResponseDto> createSpecialization(@RequestBody SpecializationCreateDto specializationCreateDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(specializationService.createSpecialization(specializationCreateDto));
     }
     @GetMapping("/get")
     public ResponseEntity<List<SpecializationResponseDto>> getAllSpecializations() {

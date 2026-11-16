@@ -1,5 +1,6 @@
 package com.uniflow.academicservice.service.impl;
 import com.uniflow.academicservice.dto.FacultySpecializationValidationRequest;
+import com.uniflow.academicservice.dto.SpecializationCreateDto;
 import com.uniflow.academicservice.dto.SpecializationResponseDto;
 import com.uniflow.academicservice.dto.DomainNameDto;
 import com.uniflow.academicservice.exception.domain.faculty.FacultyNotFoundException;
@@ -28,7 +29,9 @@ public class SpecializationServiceImpl implements SpecializationService {
     private final SubjectRepository subjectRepository;
 
     @Override
-    public SpecializationResponseDto createSpecialization(String specializationName, String facultyName) {
+    public SpecializationResponseDto createSpecialization(SpecializationCreateDto specializationCreateDto) {
+        String specializationName = specializationCreateDto.getSpecializationName();
+        String facultyName = specializationCreateDto.getFacultyName();
         if (specializationRepository.existsSpecializationByName(specializationName)) {
             throw new SpecializationExistsException("Specialization already exists");
         }

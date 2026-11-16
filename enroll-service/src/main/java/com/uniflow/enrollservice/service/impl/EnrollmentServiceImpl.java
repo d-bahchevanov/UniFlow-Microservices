@@ -2,7 +2,8 @@ package com.uniflow.enrollservice.service.impl;
 
 import com.uniflow.enrollservice.client.AcademyClient;
 import com.uniflow.enrollservice.client.ProfileClient;
-import com.uniflow.enrollservice.dto.client.SpecializationResponseDto;
+import com.uniflow.enrollservice.dto.EnrollmentStatusMessageDto;
+import com.uniflow.enrollservice.dto.PointsMsgDto;
 import com.uniflow.enrollservice.dto.client.SubjectInfoDto;
 import com.uniflow.enrollservice.dto.EnrollmentRequestDto;
 import com.uniflow.enrollservice.dto.EnrollmentResponseDto;
@@ -43,8 +44,10 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         if (enrollmentRepository.existsByStudentIdAndSubjectIdAndYear(studentId, subjectId, yearOfStudy)) {
             throw new EnrollmentAlreadyExistsException("This enrollment for this student already exists");
         }
-            long facultyId = studentProfileResponseDto.getFacultyId();
-            long specializationId = studentProfileResponseDto.getSpecializationId();
+            String facultyName = studentProfileResponseDto.getFacultyName();
+            String specializationName = studentProfileResponseDto.getSpecializationName();
+            Long facultyId = academyClient.getFacultyIdByNameInternal(facultyName);
+            Long specializationId = academyClient.getSpecializationIdByNameInternal(specializationName);
             Enrollment enrollment = new Enrollment(studentId,
                     facultyId,
                     specializationId,
@@ -52,8 +55,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                     yearOfStudy,
                     PENDING);
             enrollmentRepository.save(enrollment);
-            String facultyName = academyClient.getFacultyNameByIdInternal(facultyId);
-            String specializationName = academyClient.getSpecializationNameByIdInternal(specializationId);
             return new EnrollmentResponseDto(studentId,
                     facultyName,
                     specializationName,
@@ -64,40 +65,31 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     @Transactional
-    public void approveEnrollment(Long enrollmentId) {
+    public EnrollmentStatusMessageDto approveEnrollment(Long enrollmentId) {
         Enrollment enrollment = enrollmentRepository.findById(enrollmentId).orElseThrow(() -> new EnrollmentNotFoundException("No such enrollment"));
         if (enrollment.getStatus() != PENDING) {
             throw new InvalidEnrollmentStateException("Enrollment is not pending");
         }
         enrollment.setStatus(EnrollmentStatus.APPROVED);
+        String message = "Enrollment is " + enrollment.getStatus().toString().toLowerCase();;
+        return new EnrollmentStatusMessageDto(message);
     }
 
     @Override
     @Transactional
-    public void rejectEnrollment(Long enrollmentId) {
+    public EnrollmentStatusMessageDto rejectEnrollment(Long enrollmentId) {
         Enrollment enrollment = enrollmentRepository.findById(enrollmentId).orElseThrow(() -> new EnrollmentNotFoundException("No such enrollment"));
         if (enrollment.getStatus() != PENDING) {
             throw new InvalidEnrollmentStateException("Enrollment is not pending");
         }
         enrollment.setStatus(EnrollmentStatus.REJECTED);
+        String message = "Enrollment is " + enrollment.getStatus().toString().toLowerCase();;
+        return new EnrollmentStatusMessageDto(message);
     }
 
     @Override
     @Transactional
-    public void assignPoints(Long enrollmentId, int points) {
-        Enrollment enrollment = enrollmentRepository.findById(enrollmentId).orElseThrow(() -> new EnrollmentNotFoundException("No such enrollment"));
-        if (enrollment.getStatus() == REJECTED || enrollment.getStatus() == PENDING) {
-            throw new InvalidEnrollmentStateException("Enrollment is not active");
-        }
-        if (points > 100) {
-            throw new InvalidPointsException("Can not have more than 100 points");
-        }
-        enrollment.setPoints(points);
-    }
-
-    @Override
-    @Transactional
-    public void addPoints(Long enrollmentId, int points) {
+    public PointsMsgDto addPoints(Long enrollmentId, int points) {
         Enrollment enrollment = enrollmentRepository.findById(enrollmentId).orElseThrow(() -> new EnrollmentNotFoundException("No such enrollment"));
         if (enrollment.getStatus() == REJECTED || enrollment.getStatus() == PENDING) {
             throw new InvalidEnrollmentStateException("Enrollment is not active");
@@ -107,11 +99,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             throw new InvalidPointsException("Can not have more than 100 points");
         }
         enrollment.setPoints(pointsAccumulated);
+        return new PointsMsgDto(enrollment.getStudentId(), enrollment.getPoints());
     }
 
     @Override
     @Transactional
-    public void finishEnrollment(Long enrollmentId) {
+    public EnrollmentStatusMessageDto finishEnrollment(Long enrollmentId) {
         Enrollment enrollment = enrollmentRepository.findById(enrollmentId).orElseThrow(() -> new EnrollmentNotFoundException("No such enrollment"));
         if (enrollment.getStatus() != APPROVED) {
             throw new InvalidEnrollmentStateException("Enrollment is not active");
@@ -122,6 +115,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         } else {
             enrollment.setStatus(EnrollmentStatus.FAILED);
         }
+        String message = "Enrollment is " + enrollment.getStatus().toString().toLowerCase();
+        return new EnrollmentStatusMessageDto(message);
     }
 
     @Override

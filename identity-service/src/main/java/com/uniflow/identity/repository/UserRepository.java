@@ -1,5 +1,6 @@
 package com.uniflow.identity.repository;
 
+import com.uniflow.identity.enums.Role;
 import com.uniflow.identity.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,4 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findUserByUsername(String username);
     void deleteUserById(Long id);
     void deleteUserByUsername(String username);
+    boolean existsByRole(Role role);
 }

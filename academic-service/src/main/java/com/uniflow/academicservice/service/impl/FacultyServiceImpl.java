@@ -1,8 +1,5 @@
 package com.uniflow.academicservice.service.impl;
-import com.uniflow.academicservice.dto.DomainNameDto;
-import com.uniflow.academicservice.dto.FacultyResponseDto;
-import com.uniflow.academicservice.dto.SpecializationResponseDto;
-import com.uniflow.academicservice.dto.SubjectResponseDto;
+import com.uniflow.academicservice.dto.*;
 import com.uniflow.academicservice.exception.domain.faculty.FacultyExistsException;
 import com.uniflow.academicservice.exception.domain.faculty.FacultyNotFoundException;
 import com.uniflow.academicservice.model.Faculty;
@@ -36,7 +33,8 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public String createFaculty(String name) {
+    public String createFaculty(FacultyCreateDto facultyCreateDto) {
+        String name = facultyCreateDto.getFacultyName();
         if (facultyRepository.existsFacultyByName(name)) {
             throw new FacultyExistsException("This faculty already exists");
         }

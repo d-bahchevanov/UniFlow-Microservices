@@ -1,6 +1,6 @@
 services:
   configserver:
-    image: "uniflow/configserver:cs"
+    image: "dimitar0303/configserver:cs"
     dns:
       - 8.8.8.8
       - 8.8.4.4
@@ -24,7 +24,7 @@ services:
       - uniflow
 
   eurekaserver:
-    image: "uniflow/eurekaserver:es"
+    image: "dimitar0303/eurekaserver:es"
     container_name: eurekaserver-ms
     ports:
       - "8761:8761"
@@ -46,7 +46,7 @@ services:
       - uniflow
 
   identity-service:
-    image: "uniflow/identity-service:ic"
+    image: "dimitar0303/identity-service:ic"
     container_name: identity-ms
     ports:
       - "8080:8080"
@@ -65,6 +65,8 @@ services:
       SPRING_APPLICATION_NAME: "identity"
       DB_HOST: "identity_postgres"
       SPRING_DATASOURCE_URL: "jdbc:postgresql://identity_postgres:5432/identity_db"
+      APP_ADMIN_USERNAME: ${APP_ADMIN_USERNAME}
+      APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD}
     extends:
       file: common-config.yml
       service: microservice-kafka-config
@@ -72,7 +74,7 @@ services:
       - uniflow
 
   profile-service:
-    image: "uniflow/profile-service:pc"
+    image: "dimitar0303/profile-service:pc"
     container_name: profile-ms
     ports:
       - "8081:8081"
@@ -98,7 +100,7 @@ services:
       - uniflow
 
   academic-service:
-    image: "uniflow/academic-service:ac"
+    image: "dimitar0303/academic-service:ac"
     container_name: academy-ms
     ports:
       - "8090:8090"
@@ -124,7 +126,7 @@ services:
       - uniflow
 
   enroll-service:
-    image: "uniflow/enroll-service:ec"
+    image: "dimitar0303/enroll-service:ec"
     container_name: enrollment-ms
     ports:
       - "9000:9000"
@@ -150,7 +152,7 @@ services:
       - uniflow
 
   gatewayserver:
-    image: "uniflow/gatewayserver:gs"
+    image: "dimitar0303/gatewayserver:gs"
     container_name: gatewayserver-ms
     ports:
       - "8072:8072"

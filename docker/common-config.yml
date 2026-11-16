@@ -31,4 +31,5 @@ services:
       extends:
         service: microservice-eureka-config
       environment:
-        SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+        KAFKA_BOOTSTRAP_SERVERS: "kafka:29092"
+        SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:29092"

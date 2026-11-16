@@ -1,5 +1,7 @@
 package com.uniflow.enrollservice.controller;
 
+import com.uniflow.enrollservice.dto.EnrollmentStatusMessageDto;
+import com.uniflow.enrollservice.dto.PointsMsgDto;
 import com.uniflow.enrollservice.dto.client.SubjectInfoDto;
 import com.uniflow.enrollservice.dto.EnrollmentRequestDto;
 import com.uniflow.enrollservice.dto.EnrollmentResponseDto;
@@ -37,33 +39,23 @@ public class EnrollmentController {
     }
     @PutMapping("/enrollment/approve")
     @PreAuthorize("hasRole('PROFESSOR')")
-    public ResponseEntity<Void> approve(@RequestParam Long enrollmentId) {
-        enrollmentService.approveEnrollment(enrollmentId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<EnrollmentStatusMessageDto> approve(@RequestParam Long enrollmentId) {
+        return ResponseEntity.ok(enrollmentService.approveEnrollment(enrollmentId));
     }
     @PutMapping("/enrollment/reject")
     @PreAuthorize("hasRole('PROFESSOR')")
-    public ResponseEntity<Void> reject(@RequestParam Long enrollmentId) {
-        enrollmentService.rejectEnrollment(enrollmentId);
-        return ResponseEntity.ok().build();
-    }
-    @PutMapping("/enrollment/assign")
-    @PreAuthorize("hasRole('PROFESSOR')")
-    public ResponseEntity<Void> assignPoints(@RequestParam Long enrollmentId, @RequestParam int points) {
-        enrollmentService.assignPoints(enrollmentId, points);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<EnrollmentStatusMessageDto> reject(@RequestParam Long enrollmentId) {
+        return ResponseEntity.ok(enrollmentService.rejectEnrollment(enrollmentId));
     }
     @PutMapping("/enrollment/add/points")
     @PreAuthorize("hasRole('PROFESSOR')")
-    public ResponseEntity<Void> addPoints(@RequestParam Long enrollmentId, @RequestParam int points) {
-        enrollmentService.addPoints(enrollmentId, points);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<PointsMsgDto> addPoints(@RequestParam Long enrollmentId, @RequestParam int points) {
+        return ResponseEntity.ok(enrollmentService.addPoints(enrollmentId, points));
     }
     @PutMapping("/enrollment/finish")
     @PreAuthorize("hasRole('PROFESSOR')")
-    public ResponseEntity<Void> finish(@RequestParam Long enrollmentId) {
-        enrollmentService.finishEnrollment(enrollmentId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<EnrollmentStatusMessageDto> finish(@RequestParam Long enrollmentId) {
+        return ResponseEntity.ok(enrollmentService.finishEnrollment(enrollmentId));
     }
     @GetMapping("/subjects/available")
     public ResponseEntity<List<SubjectInfoDto>> getAvailableSubjects() {

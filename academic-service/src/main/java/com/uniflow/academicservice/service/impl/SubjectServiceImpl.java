@@ -19,9 +19,11 @@ import com.uniflow.academicservice.security.jwt.JwtService;
 import com.uniflow.academicservice.service.SubjectService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.actuate.info.InfoPropertiesInfoContributor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -29,6 +31,7 @@ public class SubjectServiceImpl implements SubjectService {
     private final SubjectRepository subjectRepository;
     private final SpecializationRepository specializationRepository;
     private final ProfileClient profileClient;
+
     @Override
     public List<SubjectResponseDto> getSubjectsBySpecialization(String specializationName) {
         return subjectRepository.findSubjectsBySpecialization_Name(specializationName).stream()
@@ -91,7 +94,9 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public List<SubjectInfoDto> getAvailableSubjectsToEnroll() {
         StudentAcademicInfoDto info = profileClient.getStudentAcademicInfo();
-        List<Subject> subjects = subjectRepository.getSubjectBySpecialization_IdAndYear(info.getSpecializationId(), info.getYearOfStudy());
+        Specialization specialization = specializationRepository.findByName(info.getSpecializationName()).orElseThrow(() -> new SpecializationNotFoundException("Error finding the specialization"));
+        Long specializationId = specialization.getId();
+        List<Subject> subjects = subjectRepository.getSubjectBySpecialization_IdAndYear(specializationId, info.getYearOfStudy());
         return subjects.stream().map(subject -> new SubjectInfoDto(subject.getName(), subject.getId())).toList();
     }
 

@@ -1,5 +1,6 @@
 package com.uniflow.academicservice.controller;
 
+import com.uniflow.academicservice.dto.FacultyCreateDto;
 import com.uniflow.academicservice.dto.FacultyResponseDto;
 import com.uniflow.academicservice.service.FacultyService;
 import lombok.AllArgsConstructor;
@@ -17,8 +18,8 @@ public class FacultyController {
     private final FacultyService facultyService;
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> createFaculty(@RequestParam String facultyName){
-        return ResponseEntity.status(HttpStatus.CREATED).body(facultyService.createFaculty(facultyName));
+    public ResponseEntity<String> createFaculty(@RequestBody FacultyCreateDto facultyCreateDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(facultyService.createFaculty(facultyCreateDto));
     }
     @GetMapping("/get")
     public ResponseEntity<List<FacultyResponseDto>> getAllFaculties() {
